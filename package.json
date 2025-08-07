@@ -1,8 +1,11 @@
 {
   "name": "home",
   "author": "小雨",
+  "efua": "小雨",
   "github": "https://gitee.com/SHIKEAIXY/Home",
+  "efug": "https://gitee.com/SHIKEAIXY/Home",
   "home": "https://xiaoyu.paydn.cn",
+  "efuh": "https://xiaoyu.paydn.cn",
   "private": true,
   "version": "4.3.0.pre [EFU]",
   "type": "module",
