@@ -19,13 +19,13 @@
             {{ config.author }}
           </a>
         </span>
-        <!-- 站点备案 -->
+        <!-- 站点备案 https://beian.miit.gov.cn -->
         <span>
-          <a v-if="siteIcp" href="https://beian.miit.gov.cn" target="_blank">
+          <a v-if="siteIcp" href="https://vdse.bdstatic.com//51c724f9dbde1b12f5f65c0f176c2f27.mp4?authorization=bce-auth-v1%2F40f207e648424f47b2e3dfbb1014b1a5%2F2025-07-13T23%3A08%3A22Z%2F-1%2Fhost%2F3227c90e8166f8dac9b73edb020eb11fcf89cd1ec0e9b1dd16394c500d6aa45f&vid=4819898164631756695" target="_blank">
             &amp;&nbsp;{{ siteIcp }}
           </a>
-          <!-- 这备那备的真的很扫（bushi） -->
-          <a v-if="siteMps" href="https://beian.mps.gov.cn" target="_blank">
+          <!-- 这备那备的真的很扫（bushi） https://beian.mps.gov.cn-->
+          <a v-if="siteMps" href="https://vdse.bdstatic.com//51c724f9dbde1b12f5f65c0f176c2f27.mp4?authorization=bce-auth-v1%2F40f207e648424f47b2e3dfbb1014b1a5%2F2025-07-13T23%3A08%3A22Z%2F-1%2Fhost%2F3227c90e8166f8dac9b73edb020eb11fcf89cd1ec0e9b1dd16394c500d6aa45f&vid=4819898164631756695" target="_blank">
             &amp;&nbsp;{{ siteMps }}
           </a>
         </span>

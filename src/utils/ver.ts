@@ -18,7 +18,7 @@ export const parseVersion = (ver: string) => {
         typer = 'release';
     };
     if (channelMatch?.[1] != 'imsyy') {
-        updateauthor = config.efua;
+        updateauthor = config.efuh;
     } else {
         updateauthor = config.author;
     };
