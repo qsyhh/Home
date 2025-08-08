@@ -58,7 +58,7 @@ export const checkForUpdate = async (
     versionType: string;
 }> => {
     try {
-        const repoUrl = versionInfo.upa === 'imsyy' ? config.github : config.efug;
+        const repoUrl = versionInfo.upa === '小雨' ? config.github : config.master;
         const repoInfo = extractRepoInfo(repoUrl);
         if (!repoInfo) {
             throw new Error('无效的 GitHub 仓库 URL');

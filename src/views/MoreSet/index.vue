@@ -22,7 +22,7 @@
         <div class="version">
           <div class="num" @dblclick="toggleVer">v&nbsp;{{ config.version }}</div>
           <github-one class="github" theme="outline" size="24" @click="jumpTo(config.github)" />
-          <file-editing-one class="github" theme="outline" size="24" @click="jumpTo(config.efug)" />
+          <file-editing-one class="github" theme="outline" size="24" @click="jumpTo(config.master)" />
         </div>
       </el-col>
     </el-row>
@@ -46,7 +46,7 @@
             <github-one class="github" theme="outline" size="24" @click="jumpTo(config.github)" />
           </el-tooltip>
           <el-tooltip content="扩展功能更新仓库" placement="top" :show-arrow="false">
-            <file-editing-one class="github" theme="outline" size="24" @click="jumpTo(config.efug)" />
+            <file-editing-one class="github" theme="outline" size="24" @click="jumpTo(config.master)" />
           </el-tooltip>
         </div>
         <el-card class="update">

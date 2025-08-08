@@ -5,8 +5,7 @@ permissions:
 on:
   push:
     branches:
-      - EFU
-      - dev
+      - master
 jobs:
   release:
     name: Build Website
