@@ -1,0 +1,41 @@
+name: Build and Deploy Preview
+permissions:
+  contents: read
+  actions: write
+on:
+  push:
+    branches:
+      - EFU
+      - dev
+jobs:
+  release:
+    name: Build Website
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4.3.0
+      - name: Setup Node.js
+        uses: actions/setup-node@v4.3.0
+        with:
+          node-version: "22.x"
+          cache: "npm"
+      - name: Configure environment
+        run: |
+          if (-not (Test-Path .env)) {
+            Copy-Item .env.example .env
+            Write-Host "Created .env from example"
+          } else {
+            Write-Host ".env already exists"
+          }
+      - name: Install dependencies
+        run: npm ci --prefer-offline
+      - name: Build Website
+        run: npm run build
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4.7.1
+        with:
+          name: Home
+          path: dist
+          retention-days: 3
