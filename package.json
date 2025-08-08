@@ -7,7 +7,7 @@
   "home": "https://xiaoyu.qsyhh.xyz",
   "efuh": "https://xiaoyu.qsyhh.xyz",
   "private": true,
-  "version": "4.3.0.pre [EFU]",
+  "version": "4.4.0 [Master]",
   "type": "module",
   "scripts": {
     "dev": "vite --host",

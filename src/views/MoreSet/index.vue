@@ -45,9 +45,6 @@
           <el-tooltip content="Github 源代码仓库" placement="top" :show-arrow="false">
             <github-one class="github" theme="outline" size="24" @click="jumpTo(config.github)" />
           </el-tooltip>
-          <el-tooltip content="扩展功能更新仓库" placement="top" :show-arrow="false">
-            <file-editing-one class="github" theme="outline" size="24" @click="jumpTo(config.master)" />
-          </el-tooltip>
         </div>
         <el-card class="update">
           <template #header>
@@ -113,7 +110,7 @@ const upData = reactive({
     "交互优化",
     "支持在移动端显示不同的壁纸",
   ],
-  fix: ["消除依赖及功能弃用提示", "增强网页兼容性", "修复 Player 模块的故障"],
+  fix: ["消除依赖及功能弃用提示", "增强网页兼容性", "修复 Player 模块的故障", "更换响应过慢的API"],
 });
 
 const toggleVer = () => {
