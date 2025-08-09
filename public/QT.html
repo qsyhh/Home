@@ -3,94 +3,44 @@
 <head>
   <meta charset="utf-8" />
   <title>赞助</title>
-  <style>
-    @font-face {
-      font-family: "bbh";
-      src: url("./font/荆南波波黑.ttf");
-    }
-    body {
-      width: 600px;
-      height: 350px;
-      margin: 0;
-      padding: 0;
-      transform: scale(4);
-      transform-origin: 0 0
-    }
-    .box1 {
-      padding: 30px;
-      background-image: url("./images/icon/底图.png");
-      background-size: cover;
-    }
-    .box2 {
-      width: 540px;
-      height: 290px;
-      border: 2px solid #fff;
-      border-radius: 5%;
-    }
-    p {
-      position: relative;
-      top: -16px;
-      left: 5px;
-      font-family: "bbh";
-    }
-    .bt {
-      font-size: 32px;
-      color: #a52a;
-    }
-    .box3 {
-      position: relative;
-      top: -90px;
-      width: 99%;
-      height: 229px;
-    }
-    img {
-      padding: 8px;
-      float: left;
-      height: 95%;
-    }
-    .right {
-      position: relative;
-      top: 10px;
-      height: 95%;
-    }
-    .zc {
-      position: relative;
-      top: 10px;
-      font-size: 20px;
-    }
-    .gx {
-      position: relative;
-      top: 38px;
-      font-size: 24px;
-    }
-    .sj {
-      position: relative;
-      top: 65px;
-      font-size: 20px;
-      right: 20px;
-      font-weight: normal;
-    }
-  </style>
+  <link rel="stylesheet" type="text/css" href="./css/style.css"/>
 </head>
-<a href="index.html" style="position:absolute;top:6px;left:5px;z-index:999;color:white;background:rgba(0,0,0,.2);padding:2px 6px;font-family:bbh;text-decoration:none;font-size:12px;border-radius:5px;">返回主页</a>
+<div style="display: flex;position:absolute;width: 60px;height: 23px;top:6px;left:5px;z-index:999;background:rgba(0,0,0,.2);font-family:bbh;font-size:12px;border-radius:5px;align-items: center;justify-content: center;"><a href="index.html" style="text-decoration:none;color:white;">返回主页</a></div>
 <body>
-    <div class="box1">
-      <div class="box2">
-        <p class="bt">或许您可以赞助我们</p><br>
-        <div class="box3">
+  <div class="box1">
+    <div class="box2">
+      <div class="p bt">或许您可以赞助我们</div>
+      <div class="box3">
+        <div class="box4">
+          <div class="bg"></div>
           <img src="./images/icon/二维码.png"/>
-          <div class="right">
-            <p class="zc">您的支持是我们继续提供免费服务的动力</p>
-            <p class="gx">在这里感谢您对小雨的喜爱</p>
-            <p class="sj"></p>
-          </div>
+        </div>
+        <div class="right">
+          <div class="p zc">您的支持是我们继续提供免费服务的动力</div>
+          <div class="p gx">在这里感谢您对小雨的喜爱</div>
+          <div class="p sj" id="timeDisplay" style="display:inline;font-family:'bbh'"></div>
         </div>
       </div>
     </div>
-    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
-    <script>
-      document.querySelector('.sj').textContent =
-        moment().format('YYYY-MM-DD HH:mm:ss');
-    </script>
+  </div>
+  <script>
+    function number(num) {
+      if (num.toString().length === 1) num = `0${num}`
+      return num
+    }
+    function updateTime() {
+      const timeDisplay = document.getElementById('timeDisplay');
+      const currentDate = new Date();
+      const year = number(currentDate.getFullYear());
+      const month = number(currentDate.getMonth() + 1);
+      const day = number(currentDate.getDate());
+      const hours = number(currentDate.getHours());
+      const minutes = number(currentDate.getMinutes());
+      const seconds = number(currentDate.getSeconds());
+      const currentTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+      timeDisplay.textContent = currentTime;
+    }
+    setInterval(updateTime, 1000)
+  </script>
 </body>
 </html>
