@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>赞助</title>
+  <style>
+    @font-face {
+      font-family: "bbh";
+      src: url("{{pluResPath}}font/荆南波波黑.ttf");
+    }
+    body {
+      width: 600px;
+      height: 350px;
+      margin: 0;
+      padding: 0;
+      transform: scale(4);
+      transform-origin: 0 0
+    }
+    .box1 {
+      padding: 30px;
+      background-image: url("{{pluResPath}}images/底图.png");
+      background-size: cover;
+    }
+    .box2 {
+      width: 540px;
+      height: 290px;
+      border: 2px solid #fff;
+      border-radius: 5%;
+    }
+    p {
+      position: relative;
+      top: -16px;
+      left: 5px;
+      font-family: "bbh";
+    }
+    .bt {
+      font-size: 32px;
+      color: #a52a;
+    }
+    .box3 {
+      position: relative;
+      top: -90px;
+      width: 99%;
+      height: 229px;
+    }
+    img {
+      padding: 8px;
+      float: left;
+      height: 95%;
+    }
+    .right {
+      position: relative;
+      top: 10px;
+      height: 95%;
+    }
+    .zc {
+      position: relative;
+      top: 10px;
+      font-size: 20px;
+    }
+    .gx {
+      position: relative;
+      top: 38px;
+      font-size: 24px;
+    }
+    h1 {
+      position: relative;
+      font-size: 32px;
+      float: right;
+      bottom: 10px;
+      right: 10px;
+    }
+    .sj {
+      position: relative;
+      top: 10px;
+    }
+    </style>
+</head>
+<body>
+    <div class="box1">
+      <div class="box2">
+        <p class="bt">或许您可以赞助我们</p><br>
+        <div class="box3">
+          <img src="{{pluResPath}}二维码.png"/>
+          <div class="right">
+            <p class="zc">您的支持是我们继续提供免费服务的动力</p>
+            <p class="gx">在这里感谢您对我们的喜爱</p>
+            <h1  class="sj">{{time}}</h1>
+          </div>
+        </div>
+      </div>
+    </div>
+</body>
+</html>
