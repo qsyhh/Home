@@ -85,10 +85,17 @@
           <div class="right">
             <p class="zc">您的支持是我们继续提供免费服务的动力</p>
             <p class="gx">在这里感谢您对小雨的喜爱</p>
-            <h1  class="sj">{{time}}</h1>
+            <h1 class="sj"></h1>
           </div>
         </div>
       </div>
     </div>
+
+    <!-- 时间脚本 -->
+    <script src="https://cdn.jsdelivr.net/npm/moment@2.29.4/moment.min.js"></script>
+    <script>
+      document.querySelector('.sj').textContent =
+        moment().format('YYYY-MM-DD HH:mm:ss');
+    </script>
 </body>
 </html>
