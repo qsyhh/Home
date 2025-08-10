@@ -11,27 +11,37 @@
   },
   {
     "icon": "CompactDisc",
-    "name": "音乐",
-    "link": " "
+    "name": "飞扬的坤坤 -游戏",
+    "link": "https://xiaoyu.qsyhh.xyz/games/FY/index"
   },
   {
     "icon": "Compass",
-    "name": "起始页",
-    "link": " "
+    "name": "消坤乐 -游戏",
+    "link": "https://xiaoyu.qsyhh.xyz/games/XXL/index"
   },
   {
     "icon": "Book",
-    "name": "网址集",
-    "link": " "
+    "name": "2048 -游戏",
+    "link": "https://xiaoyu.qsyhh.xyz/games/2048/index"
   },
   {
     "icon": "Fire",
-    "name": "今日热榜",
-    "link": " "
+    "name": "堆积木 -游戏",
+    "link": "https://xiaoyu.qsyhh.xyz/games/DJM/index"
   },
   {
     "icon": "LaptopCode",
-    "name": "站点监测",
-    "link": " "
+    "name": "打砖块 -游戏",
+    "link": "https://xiaoyu.qsyhh.xyz/games/DZK/index"
+  },
+  {
+    "icon": "Fire",
+    "name": "倾斜迷宫 -游戏",
+    "link": "https://xiaoyu.qsyhh.xyz/games/MG/index"
+  },
+  {
+    "icon": "Fire",
+    "name": "扫雷 -游戏",
+    "link": "https://xiaoyu.qsyhh.xyz/games/SL/index"
   }
 ]

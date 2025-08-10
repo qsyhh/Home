@@ -102,6 +102,7 @@ const siteUrl = computed(() => {
 // 更新日志
 const upData = reactive({
   new: [
+    "增加7个小游戏功能",
     "增加逐字歌词功能",
     "依赖组件更新",
     "支持在移动端打开设置",
