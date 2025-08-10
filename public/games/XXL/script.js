@@ -18,6 +18,12 @@ function candyCrushGame() {
     let timeLeft = 0;
     let gameInterval = null;
     let timerInterval = null;
+    
+    // 触控相关变量
+    let touchStartX = 0;
+    let touchStartY = 0;
+    let touchStartId = null;
+    const swipeThreshold = 50; // 滑动判定阈值
 
     const candyColors = [
         "url(img/1.png)",
@@ -35,24 +41,40 @@ function candyCrushGame() {
             const square = document.createElement("div");
             square.setAttribute("draggable", true);
             square.setAttribute("id", i);
+            // 添加触控样式反馈
+            square.style.transition = "transform 0.1s ease";
             let randomColor = Math.floor(Math.random() * candyColors.length);
             square.style.backgroundImage = candyColors[randomColor];
+            square.style.backgroundSize = "contain";
+            square.style.backgroundRepeat = "no-repeat";
+            square.style.backgroundPosition = "center";
             grid.appendChild(square);
             squares.push(square);
         }
-        squares.forEach(square => square.addEventListener("dragstart", dragStart));
-        squares.forEach(square => square.addEventListener("dragend", dragEnd));
-        squares.forEach(square => square.addEventListener("dragover", dragOver));
-        squares.forEach(square => square.addEventListener("dragenter", dragEnter));
-        squares.forEach(square => square.addEventListener("dragleave", dragLeave));
-        squares.forEach(square => square.addEventListener("drop", dragDrop));
+        
+        // 桌面拖拽事件
+        squares.forEach(square => {
+            square.addEventListener("dragstart", dragStart);
+            square.addEventListener("dragend", dragEnd);
+            square.addEventListener("dragover", dragOver);
+            square.addEventListener("dragenter", dragEnter);
+            square.addEventListener("dragleave", dragLeave);
+            square.addEventListener("drop", dragDrop);
+            
+            // 移动端触控事件
+            square.addEventListener("touchstart", touchStart);
+            square.addEventListener("touchmove", touchMove);
+            square.addEventListener("touchend", touchEnd);
+        });
     }
 
     let colorBeingDragged, colorBeingReplaced, squareIdBeingDragged, squareIdBeingReplaced;
 
+    // 桌面拖拽事件处理
     function dragStart() {
         colorBeingDragged = this.style.backgroundImage;
         squareIdBeingDragged = parseInt(this.id);
+        this.classList.add("dragging");
     }
 
     function dragOver(e) {
@@ -61,13 +83,15 @@ function candyCrushGame() {
 
     function dragEnter(e) {
         e.preventDefault();
+        this.classList.add("hover");
     }
 
     function dragLeave() {
-
+        this.classList.remove("hover");
     }
 
     function dragDrop() {
+        this.classList.remove("hover");
         colorBeingReplaced = this.style.backgroundImage;
         squareIdBeingReplaced = parseInt(this.id);
         this.style.backgroundImage = colorBeingDragged;
@@ -75,17 +99,99 @@ function candyCrushGame() {
     }
 
     function dragEnd() {
+        this.classList.remove("dragging");
+        validateMove();
+    }
+
+    // 移动端触控事件处理
+    function touchStart(e) {
+        // 防止触摸时页面滚动
+        e.preventDefault();
+        
+        // 记录触摸起始位置和方块ID
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+        touchStartId = parseInt(this.id);
+        
+        // 添加触摸反馈
+        this.style.transform = "scale(0.95)";
+    }
+
+    function touchMove(e) {
+        // 防止触摸移动时页面滚动
+        e.preventDefault();
+    }
+
+    function touchEnd(e) {
+        // 恢复触摸反馈样式
+        squares[touchStartId].style.transform = "scale(1)";
+        
+        // 计算触摸结束位置
+        const touchEndX = e.changedTouches[0].clientX;
+        const touchEndY = e.changedTouches[0].clientY;
+        
+        // 计算滑动距离
+        const diffX = touchEndX - touchStartX;
+        const diffY = touchEndY - touchStartY;
+        
+        // 确定滑动方向（优先处理更明显的方向）
+        if (Math.abs(diffX) > Math.abs(diffY)) {
+            // 水平滑动
+            if (Math.abs(diffX) > swipeThreshold) {
+                if (diffX > 0) {
+                    // 向右滑动 - 与右侧方块交换
+                    squareIdBeingReplaced = touchStartId + 1;
+                } else {
+                    // 向左滑动 - 与左侧方块交换
+                    squareIdBeingReplaced = touchStartId - 1;
+                }
+            }
+        } else {
+            // 垂直滑动
+            if (Math.abs(diffY) > swipeThreshold) {
+                if (diffY > 0) {
+                    // 向下滑动 - 与下方方块交换
+                    squareIdBeingReplaced = touchStartId + width;
+                } else {
+                    // 向上滑动 - 与上方方块交换
+                    squareIdBeingReplaced = touchStartId - width;
+                }
+            }
+        }
+        
+        // 如果有有效的交换目标，执行交换
+        if (squareIdBeingReplaced !== null && squareIdBeingReplaced >= 0 && squareIdBeingReplaced < squares.length) {
+            squareIdBeingDragged = touchStartId;
+            colorBeingDragged = squares[squareIdBeingDragged].style.backgroundImage;
+            colorBeingReplaced = squares[squareIdBeingReplaced].style.backgroundImage;
+            
+            // 执行交换
+            squares[squareIdBeingDragged].style.backgroundImage = colorBeingReplaced;
+            squares[squareIdBeingReplaced].style.backgroundImage = colorBeingDragged;
+            
+            // 验证移动是否有效
+            validateMove();
+        }
+        
+        // 重置变量
+        squareIdBeingReplaced = null;
+        touchStartId = null;
+    }
+
+    // 验证移动是否有效（共享函数，同时用于桌面和移动）
+    function validateMove() {
         let validMoves = [
-            squareIdBeingDragged - 1,
-            squareIdBeingDragged - width,
-            squareIdBeingDragged + 1,
-            squareIdBeingDragged + width
+            squareIdBeingDragged - 1,      // 左
+            squareIdBeingDragged - width,  // 上
+            squareIdBeingDragged + 1,      // 右
+            squareIdBeingDragged + width   // 下
         ];
         let validMove = validMoves.includes(squareIdBeingReplaced);
 
         if (squareIdBeingReplaced && validMove) {
             squareIdBeingReplaced = null;
         } else if (squareIdBeingReplaced && !validMove) {
+            // 无效移动，恢复原状
             squares[squareIdBeingReplaced].style.backgroundImage = colorBeingReplaced;
             squares[squareIdBeingDragged].style.backgroundImage = colorBeingDragged;
         } else {
@@ -94,12 +200,15 @@ function candyCrushGame() {
     }
 
     function moveIntoSquareBelow() {
+        // 顶部填充新糖果
         for (let i = 0; i < width; i++) {
             if (squares[i].style.backgroundImage === "") {
                 let randomColor = Math.floor(Math.random() * candyColors.length);
                 squares[i].style.backgroundImage = candyColors[randomColor];
             }
         }
+        
+        // 下落逻辑
         for (let i = 0; i < width * (width - 1); i++) {
             if (squares[i + width].style.backgroundImage === "") {
                 squares[i + width].style.backgroundImage = squares[i].style.backgroundImage;
@@ -117,7 +226,12 @@ function candyCrushGame() {
             if (rowOfFour.every(index => squares[index].style.backgroundImage === decidedColor && !isBlank)) {
                 score += 4;
                 scoreDisplay.innerHTML = score;
-                rowOfFour.forEach(index => squares[index].style.backgroundImage = "");
+                rowOfFour.forEach(index => {
+                    squares[index].style.backgroundImage = "";
+                    // 添加消除动画效果
+                    squares[index].classList.add("matched");
+                    setTimeout(() => squares[index].classList.remove("matched"), 300);
+                });
             }
         }
     }
@@ -130,7 +244,11 @@ function candyCrushGame() {
             if (columnOfFour.every(index => squares[index].style.backgroundImage === decidedColor && !isBlank)) {
                 score += 4;
                 scoreDisplay.innerHTML = score;
-                columnOfFour.forEach(index => squares[index].style.backgroundImage = "");
+                columnOfFour.forEach(index => {
+                    squares[index].style.backgroundImage = "";
+                    squares[index].classList.add("matched");
+                    setTimeout(() => squares[index].classList.remove("matched"), 300);
+                });
             }
         }
     }
@@ -144,7 +262,11 @@ function candyCrushGame() {
             if (rowOfThree.every(index => squares[index].style.backgroundImage === decidedColor && !isBlank)) {
                 score += 3;
                 scoreDisplay.innerHTML = score;
-                rowOfThree.forEach(index => squares[index].style.backgroundImage = "");
+                rowOfThree.forEach(index => {
+                    squares[index].style.backgroundImage = "";
+                    squares[index].classList.add("matched");
+                    setTimeout(() => squares[index].classList.remove("matched"), 300);
+                });
             }
         }
     }
@@ -157,7 +279,11 @@ function candyCrushGame() {
             if (columnOfThree.every(index => squares[index].style.backgroundImage === decidedColor && !isBlank)) {
                 score += 3;
                 scoreDisplay.innerHTML = score;
-                columnOfThree.forEach(index => squares[index].style.backgroundImage = "");
+                columnOfThree.forEach(index => {
+                    squares[index].style.backgroundImage = "";
+                    squares[index].classList.add("matched");
+                    setTimeout(() => squares[index].classList.remove("matched"), 300);
+                });
             }
         }
     }
@@ -183,6 +309,7 @@ function candyCrushGame() {
         if (mode === "timed") {
             timeLeft = 120;
             updateTimerDisplay();
+            timerDisplay.style.display = "block";
             timerInterval = setInterval(() => {
                 timeLeft--;
                 updateTimerDisplay();
@@ -192,7 +319,7 @@ function candyCrushGame() {
                 }
             }, 1000);
         } else {
-            timerDisplay.innerHTML = "";
+            timerDisplay.style.display = "none";
         }
     }
 
@@ -200,16 +327,26 @@ function candyCrushGame() {
         if (currentMode === "timed") {
             let minutes = Math.floor(timeLeft / 60);
             let seconds = timeLeft % 60;
-            timerDisplay.innerHTML = `Time Left: ${minutes}:${seconds.toString().padStart(2, "0")}`;
-        } else {
-            timerDisplay.innerHTML = "";
+            timerDisplay.innerHTML = `剩余时间: ${minutes}:${seconds.toString().padStart(2, "0")}`;
+            
+            // 时间少于10秒时添加警告样式
+            if (timeLeft < 10) {
+                timerDisplay.classList.add("warning");
+            } else {
+                timerDisplay.classList.remove("warning");
+            }
         }
     }
 
     function endGame() {
         clearInterval(gameInterval);
         squares.forEach(square => square.setAttribute("draggable", false));
-        alert(`Time's Up! Your score is ${score}`);
+        // 使用更适合移动设备的对话框
+        if (confirm(`时间到！你的分数是 ${score}\n再玩一次？`)) {
+            startGame(currentMode);
+        } else {
+            changeMode();
+        }
     }
 
     function changeMode() {
@@ -219,8 +356,26 @@ function candyCrushGame() {
         }
         grid.style.display = "none";
         scoreDisplay.parentElement.style.display = "none";
+        timerDisplay.style.display = "none";
         modeSelection.style.display = "flex";
     }
+
+    // 添加响应式调整
+    function adjustForMobile() {
+        const isMobile = window.innerWidth < 768;
+        if (isMobile) {
+            grid.style.maxWidth = "90vw";
+            grid.style.maxHeight = "90vw";
+        } else {
+            grid.style.maxWidth = "600px";
+            grid.style.maxHeight = "600px";
+        }
+    }
+
+    // 初始化时调整一次
+    adjustForMobile();
+    // 窗口大小变化时重新调整
+    window.addEventListener('resize', adjustForMobile);
 
     endlessButton.addEventListener("click", () => startGame("endless"));
     timedButton.addEventListener("click", () => startGame("timed"));

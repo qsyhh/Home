@@ -1,15 +1,15 @@
-// 游戏配置常量
+// 游戏配置常量（降低难度版本）
 const GAME_CONFIG = {
   FPS: 40,
-  JUMP_VELOCITY: -10,
-  MAX_FALL_SPEED: 10,
-  GRAVITY: 1,
-  PIPE_SPEED: -2,
-  PIPE_GAP_MIN: 100,
-  PIPE_GAP_MAX: 160,
-  PIPE_INTERVAL: 300, // 管道生成间隔(px)
-  INITIAL_PIPE_OFFSET: 500, // 初始管道位置偏移
-  BIRD_START_X: 100, // 鸟的初始X位置
+  JUMP_VELOCITY: -12, // 增强跳跃力度（更易上升）
+  MAX_FALL_SPEED: 8, // 降低最大下落速度
+  GRAVITY: 0.8, // 减小重力（下落更慢）
+  PIPE_SPEED: -1.5, // 减慢管道速度（反应时间更长）
+  PIPE_GAP_MIN: 150, // 增大管道最小间隙
+  PIPE_GAP_MAX: 250, // 增大管道最大间隙
+  PIPE_INTERVAL: 350, // 增大管道间隔（生成更稀疏）
+  INITIAL_PIPE_OFFSET: 20, // 初始管道位置偏移
+  BIRD_START_X_RATIO: 0.2, // 鸟的初始X位置（相对于画布宽度的比例）
 };
 
 // 游戏状态枚举
@@ -29,6 +29,10 @@ const utils = {
   // 角度转弧度
   toRadians(degrees) {
     return degrees * Math.PI / 180;
+  },
+  // 计算相对字体大小（根据画布宽度）
+  getRelativeFontSize(canvasWidth, ratio = 0.05) {
+    return Math.max(12, Math.floor(canvasWidth * ratio));
   }
 };
 
@@ -112,6 +116,10 @@ class FlappyGame {
     }
     this.ctx = this.canvas.getContext('2d');
     
+    // 初始化自适应尺寸
+    this.initCanvasSize();
+    window.addEventListener('resize', () => this.initCanvasSize());
+    
     // 游戏状态
     this.gameMode = GameMode.PRESTART;
     this.lastRunTime = 0;
@@ -129,12 +137,38 @@ class FlappyGame {
       finishLine: new Image()
     };
 
-    // 绑定事件处理
+    // 绑定事件处理（全画布可点击）
     this.bindEvents();
   }
 
   /**
-   * 绑定用户输入事件
+   * 初始化画布尺寸（自适应屏幕，保持4:3比例）
+   */
+  initCanvasSize() {
+    const maxWidth = window.innerWidth * 0.95; // 最大宽度为屏幕95%
+    const maxHeight = window.innerHeight * 0.9; // 最大高度为屏幕90%
+    const aspectRatio = 4 / 3; // 宽高比4:3
+
+    // 根据屏幕尺寸计算合适的画布大小
+    let width = maxWidth;
+    let height = width / aspectRatio;
+
+    // 如果高度超过最大允许高度，按高度重新计算
+    if (height > maxHeight) {
+      height = maxHeight;
+      width = height * aspectRatio;
+    }
+
+    this.canvas.width = width;
+    this.canvas.height = height;
+
+    // 设置canvas样式尺寸（确保显示正确）
+    this.canvas.style.width = `${width}px`;
+    this.canvas.style.height = `${height}px`;
+  }
+
+  /**
+   * 绑定用户输入事件（适配触摸和鼠标）
    */
   bindEvents() {
     const handleAction = (event) => {
@@ -155,9 +189,9 @@ class FlappyGame {
       event.preventDefault();
     };
 
-    // 触摸事件
+    // 触摸事件（全画布可触摸）
     this.canvas.addEventListener('touchstart', handleAction);
-    // 鼠标事件
+    // 鼠标事件（全画布可点击）
     this.canvas.addEventListener('mousedown', handleAction);
     // 键盘事件
     document.addEventListener('keydown', (e) => {
@@ -208,9 +242,9 @@ class FlappyGame {
    * 初始化游戏
    */
   init() {
-    // 创建鸟精灵
+    // 创建鸟精灵（位置按画布比例计算）
     this.bird = new Sprite(this.images.bird);
-    this.bird.x = GAME_CONFIG.BIRD_START_X;
+    this.bird.x = this.canvas.width * GAME_CONFIG.BIRD_START_X_RATIO;
     this.bird.y = this.canvas.height / 2;
 
     // 初始化管道
@@ -225,18 +259,19 @@ class FlappyGame {
    */
   initPipes() {
     this.pipes = [];
-    // 生成初始管道
-    let currentX = GAME_CONFIG.INITIAL_PIPE_OFFSET;
+    // 生成初始管道（位置按画布比例计算）
+    let currentX = this.canvas.width + GAME_CONFIG.INITIAL_PIPE_OFFSET;
     
-    // 生成随机管道
-    for (let i = 0; i < 10; i++) {
+    // 生成随机管道（数量减少，降低难度）
+    for (let i = 0; i < 8; i++) {
       const gapHeight = utils.getRandomBetween(
         GAME_CONFIG.PIPE_GAP_MIN,
         GAME_CONFIG.PIPE_GAP_MAX
       );
+      // 管道间隙位置更居中，避免极端位置
       const gapTop = utils.getRandomBetween(
-        50,
-        this.canvas.height - gapHeight - 150
+        this.canvas.height * 0.15, // 顶部边界（画布15%高度）
+        this.canvas.height - gapHeight - this.canvas.height * 0.25 // 底部边界（画布25%高度）
       );
       
       this.addPipePair(currentX, gapTop, gapHeight);
@@ -310,7 +345,7 @@ class FlappyGame {
    * 更新鸟的物理状态
    */
   updateBirdPhysics() {
-    // 应用重力
+    // 应用重力（降低难度：下落更慢）
     if (this.bird.velocityY < GAME_CONFIG.MAX_FALL_SPEED) {
       this.bird.velocityY += GAME_CONFIG.GRAVITY;
     }
@@ -318,9 +353,9 @@ class FlappyGame {
     // 更新鸟的旋转角度
     this.updateBirdTilt();
 
-    // 边界检测
+    // 边界检测（增加底部缓冲：允许稍微超出底部再判定失败）
     const birdBounds = this.bird.getBounds();
-    if (birdBounds.y + birdBounds.height > this.canvas.height || birdBounds.y < 0) {
+    if (birdBounds.y + birdBounds.height > this.canvas.height + 20 || birdBounds.y < -birdBounds.height) {
       this.gameMode = GameMode.OVER;
     }
   }
@@ -330,11 +365,11 @@ class FlappyGame {
    */
   updateBirdTilt() {
     if (this.bird.velocityY < 0) {
-      // 上升时向上倾斜
-      this.bird.angle = -15;
-    } else if (this.bird.angle < 70) {
-      // 下落时逐渐向下倾斜
-      this.bird.angle += 4;
+      // 上升时向上倾斜（角度减小，更平缓）
+      this.bird.angle = -10;
+    } else if (this.bird.angle < 50) {
+      // 下落时逐渐向下倾斜（角度减小，更平缓）
+      this.bird.angle += 3;
     }
   }
 
@@ -384,7 +419,7 @@ class FlappyGame {
   }
 
   /**
-   * 绘制底部滚动条
+   * 绘制底部滚动条（自适应画布尺寸）
    */
   drawBottomBar() {
     const bar = this.images.bottomBar;
@@ -396,42 +431,73 @@ class FlappyGame {
       this.bottomBarOffset = 0;
     }
 
-    // 绘制底部条（无缝滚动）
-    this.ctx.drawImage(bar, this.bottomBarOffset, this.canvas.height - bar.height);
-    this.ctx.drawImage(bar, this.bottomBarOffset + bar.width, this.canvas.height - bar.height);
-  }
-
-  /**
-   * 绘制开始界面
-   */
-  drawStartScreen() {
-    this.ctx.font = '25px Arial';
-    this.ctx.fillStyle = 'red';
-    this.ctx.textAlign = 'center';
-    this.ctx.fillText(
-      '点击或按空格开始游戏',
-      this.canvas.width / 2,
-      this.canvas.height / 4
+    // 绘制底部条（无缝滚动，适配画布高度）
+    const barHeight = Math.min(bar.height, this.canvas.height * 0.15); // 底部条高度不超过画布15%
+    this.ctx.drawImage(
+      bar, 
+      this.bottomBarOffset, 
+      this.canvas.height - barHeight,
+      bar.width,
+      barHeight
+    );
+    this.ctx.drawImage(
+      bar, 
+      this.bottomBarOffset + bar.width, 
+      this.canvas.height - barHeight,
+      bar.width,
+      barHeight
     );
   }
 
   /**
-   * 绘制游戏结束界面
+   * 绘制开始界面（自适应文本）
+   */
+  drawStartScreen() {
+    const titleSize = utils.getRelativeFontSize(this.canvas.width, 0.06);
+    const subSize = utils.getRelativeFontSize(this.canvas.width, 0.04);
+    
+    this.ctx.font = `${titleSize}px Arial`;
+    this.ctx.fillStyle = 'red';
+    this.ctx.textAlign = 'center';
+    this.ctx.fillText(
+      '点击/触摸开始',
+      this.canvas.width / 2,
+      this.canvas.height / 3
+    );
+
+    this.ctx.font = `${subSize}px Arial`;
+    this.ctx.fillText(
+      '按空格/上箭头跳跃',
+      this.canvas.width / 2,
+      this.canvas.height / 2
+    );
+  }
+
+  /**
+   * 绘制游戏结束界面（自适应文本）
    */
   drawGameOver() {
-    this.ctx.font = '30px Arial';
+    const titleSize = utils.getRelativeFontSize(this.canvas.width, 0.06);
+    const subSize = utils.getRelativeFontSize(this.canvas.width, 0.04);
+    
+    this.ctx.font = `${titleSize}px Arial`;
     this.ctx.fillStyle = 'red';
     this.ctx.textAlign = 'center';
     
     if (this.gameMode === GameMode.OVER) {
-      this.ctx.fillText('游戏结束', this.canvas.width / 2, 100);
+      this.ctx.fillText('游戏结束', this.canvas.width / 2, this.canvas.height / 3);
     } else {
-      this.ctx.fillText('恭喜胜利！', this.canvas.width / 2, 100);
+      this.ctx.fillText('恭喜胜利！', this.canvas.width / 2, this.canvas.height / 3);
     }
     
-    this.ctx.fillText(`得分: ${this.score}`, this.canvas.width / 2, 150);
-    this.ctx.font = '20px Arial';
-    this.ctx.fillText('点击或按空格重新开始', this.canvas.width / 2, 300);
+    this.ctx.fillText(`得分: ${this.score}`, this.canvas.width / 2, this.canvas.height / 2);
+    
+    this.ctx.font = `${subSize}px Arial`;
+    this.ctx.fillText(
+      '点击/触摸重新开始',
+      this.canvas.width / 2,
+      this.canvas.height * 0.7
+    );
   }
 
   /**
@@ -443,7 +509,7 @@ class FlappyGame {
     this.bottomBarOffset = 0;
     this.lastRunTime = 0;
     
-    // 重置鸟的状态
+    // 重置鸟的状态（位置按画布比例）
     this.bird.y = this.canvas.height / 2;
     this.bird.velocityY = 0;
     this.bird.angle = 0;
@@ -480,11 +546,12 @@ class FlappyGame {
         // 绘制所有管道
         this.pipes.forEach(pipe => pipe.draw(this.ctx));
         
-        // 显示得分
-        this.ctx.font = '20px Arial';
+        // 显示得分（自适应字体）
+        const scoreSize = utils.getRelativeFontSize(this.canvas.width, 0.05);
+        this.ctx.font = `${scoreSize}px Arial`;
         this.ctx.fillStyle = 'black';
         this.ctx.textAlign = 'left';
-        this.ctx.fillText(`得分: ${this.score}`, 10, 30);
+        this.ctx.fillText(`得分: ${this.score}`, 10, scoreSize + 5);
         break;
 
       case GameMode.OVER:
@@ -507,7 +574,8 @@ class FlappyGame {
       .then(() => this.init())
       .catch(error => {
         console.error('游戏初始化失败:', error);
-        this.ctx.font = '20px Arial';
+        const errSize = utils.getRelativeFontSize(this.canvas.width, 0.04);
+        this.ctx.font = `${errSize}px Arial`;
         this.ctx.fillStyle = 'red';
         this.ctx.textAlign = 'center';
         this.ctx.fillText(
