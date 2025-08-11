@@ -6,27 +6,19 @@
           <span :class="ShowStartYear ? 'c-hidden' : 'hidden'">Copyright&nbsp;</span>
           &copy;
           <span v-if="ShowStartYear" class="site-start">
-            <!-- {{ startYear }} 年期env-->
-            -
+            <!-- {{ startYear }} 年期env--> -
           </span>
           {{ fullYear }}
         </span>
         <!-- 以下信息请不要修改哦 -->
         <span class="hidden">
-        <!-- &amp;  --> &nbsp;Made&nbsp;by
-          <a :href="config.github" target="_blank">
-            {{ config.author }}
-          </a>
+          &nbsp;Made&nbsp;by
+          <a :href="config.github" target="_blank">{{ config.author }}</a>&nbsp;&amp;
         </span>
-        <!-- 站点备案 https://beian.miit.gov.cn -->
         <span>
-          <a v-if="siteIcp" href="https://vdse.bdstatic.com//51c724f9dbde1b12f5f65c0f176c2f27.mp4?authorization=bce-auth-v1%2F40f207e648424f47b2e3dfbb1014b1a5%2F2025-07-13T23%3A08%3A22Z%2F-1%2Fhost%2F3227c90e8166f8dac9b73edb020eb11fcf89cd1ec0e9b1dd16394c500d6aa45f&vid=4819898164631756695" target="_blank">
-            &amp;&nbsp;{{ siteIcp }}
-          </a>
-          <!-- 这备那备的真的很扫（bushi） https://beian.mps.gov.cn-->
-          <a v-if="siteMps" href=" " target="_blank">
-            &amp;&nbsp;{{ siteMps }}
-          </a>
+          <a v-if="siteIcp" href="https://vdse.bdstatic.com//51c724f9dbde1b12f5f65c0f176c2f27.mp4?authorization=bce-auth-v1%2F40f207e648424f47b2e3dfbb1014b1a5%2F2025-07-13T23%3A08%3A22Z%2F-1%2Fhost%2F3227c90e8166f8dac9b73edb020eb11fcf89cd1ec0e9b1dd16394c500d6aa45f&vid=4819898164631756695" target="_blank">{{ siteIcp }}</a>
+          <template v-if="siteIcp && siteMps">&nbsp;&amp;&nbsp;</template>
+          <a v-if="siteMps" href="https://github.com/qsyhh/Home/commits/master" target="_blank">{{ siteMps }}</a>
         </span>
       </div>
       <div v-else class="lrc" @dblclick="toggleForceIcon">
