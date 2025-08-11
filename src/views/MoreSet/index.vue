@@ -102,7 +102,6 @@ const siteUrl = computed(() => {
 // 更新日志
 const upData = reactive({
   new: [
-    "使迷宫游戏支持陀螺仪",
     "又增加4个小游戏功能",
     "增加6个小游戏功能",
     "增加逐字歌词功能",
