@@ -1,0 +1,411 @@
+/* CSS变量定义 */
+:root {
+    --background-color: #f0f2f5;
+    --text-color: #333;
+    --theme-toggle-color: #ffa500;
+    --header-bg: #fff;
+    --header-color: #2c3e50;
+    --card-bg: #fff;
+    --card-shadow: rgba(0,0,0,0.1);
+    --card-hover-shadow: rgba(0,0,0,0.2);
+    --card-text: #2c3e50;
+    --card-description: #666;
+    --button-bg: #3498db;
+    --button-hover: #2980b9;
+    --button-text: #fff;
+}
+
+/* 深色主题 */
+[data-theme="dark"] {
+    --background-color: #1a1a1a;
+    --text-color: #e0e0e0;
+    --theme-toggle-color: #f1c40f;
+    --header-bg: #242424;
+    --header-color: #fff;
+    --card-bg: #2d2d2d;
+    --card-shadow: rgba(0,0,0,0.3);
+    --card-hover-shadow: rgba(0,0,0,0.4);
+    --card-text: #fff;
+    --card-description: #bbb;
+    --button-bg: #2980b9;
+    --button-hover: #3498db;
+    --button-text: #fff;
+}
+
+/* 重置默认样式 */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    background-color: var(--background-color);
+    color: var(--text-color);
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* GitHub链接样式 */
+.github-link {
+    position: fixed;
+    top: 20px;
+    left: 20px;
+    padding: 10px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--card-bg);
+    color: var(--header-color);
+    border: 1px solid var(--card-shadow);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    box-shadow: 0 2px 4px var(--card-shadow);
+    text-decoration: none;
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+}
+
+.github-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--card-hover-shadow);
+}
+
+.github-link i {
+    font-size: 1.2rem;
+}
+
+/* 主题切换按钮 */
+.theme-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    padding: 10px;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: var(--card-bg);
+    color: var(--theme-toggle-color);
+    border: 1px solid var(--card-shadow);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+    box-shadow: 0 2px 4px var(--card-shadow);
+    -webkit-tap-highlight-color: transparent;
+    outline: none;
+}
+
+.theme-toggle:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px var(--card-hover-shadow);
+}
+
+.theme-toggle i {
+    font-size: 0.9rem;
+}
+
+/* 手机端样式 */
+@media screen and (max-width: 768px) {
+    .theme-toggle i {
+        font-size: 1rem;
+    }
+}
+
+/* 头部样式 */
+.header {
+    text-align: center;
+    padding: 2rem 0;
+    background: var(--header-bg);
+    box-shadow: 0 2px 4px var(--card-shadow);
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+/* 搜索框样式 */
+.search-container {
+    margin: 1.5rem auto 0;
+    display: flex;
+    justify-content: center;
+    max-width: 500px;
+}
+
+.search-input {
+    width: 100%;
+    padding: 10px 15px;
+    border: 1px solid var(--card-shadow);
+    border-radius: 20px 0 0 20px;
+    font-size: 1rem;
+    outline: none;
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    transition: all 0.3s ease;
+}
+
+.search-input:focus {
+    border-color: var(--button-bg);
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.3);
+}
+
+.search-button {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border: none;
+    border-radius: 0 20px 20px 0;
+    padding: 10px 15px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.search-button:hover {
+    background-color: var(--button-hover);
+}
+
+/* 搜索结果为空的样式 */
+.no-results {
+    grid-column: 1 / -1;
+    text-align: center;
+    padding: 2rem;
+    background-color: var(--card-bg);
+    border-radius: 10px;
+    box-shadow: 0 2px 4px var(--card-shadow);
+    color: var(--card-text);
+    font-size: 1.2rem;
+}
+
+/* 分类导航样式 */
+.categories-container {
+    margin: 1.5rem auto 0;
+    max-width: 800px;
+    padding: 0 1rem;
+}
+
+.categories-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.category-item {
+    margin: 0.25rem;
+}
+
+.category-button {
+    background-color: var(--card-bg);
+    color: var(--text-color);
+    border: 1px solid var(--card-shadow);
+    border-radius: 20px;
+    padding: 0.5rem 1rem;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.9rem;
+}
+
+.category-button:hover {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border-color: var(--button-bg);
+}
+
+.category-button.active {
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    border-color: var(--button-bg);
+}
+
+/* 响应式搜索框和分类 */
+@media (max-width: 768px) {
+    .search-container {
+        max-width: 90%;
+    }
+    
+    .search-input {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+    
+    .search-button {
+        padding: 8px 12px;
+    }
+
+    .categories-container {
+        max-width: 100%;
+        padding: 0 0.5rem;
+    }
+
+    .category-button {
+        padding: 0.4rem 0.8rem;
+        font-size: 0.8rem;
+    }
+}
+
+.header h1 {
+    color: var(--header-color);
+    font-size: 2.5rem;
+    margin-bottom: 1rem;
+    transition: color 0.3s ease;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* 游戏网格容器 */
+.games-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+    padding: 20px 0;
+}
+
+/* 游戏卡片样式 */
+.game-card {
+    background: var(--card-bg);
+    border-radius: 10px;
+    padding: 20px;
+    text-align: center;
+    transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 2px 4px var(--card-shadow);
+    cursor: pointer;
+}
+
+.game-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 8px var(--card-hover-shadow);
+}
+
+.game-card img {
+    width: 100%;
+    max-width: 200px;
+    height: auto;
+    border-radius: 8px;
+    margin-bottom: 15px;
+}
+
+.game-card h3 {
+    color: var(--card-text);
+    margin-bottom: 10px;
+    font-size: 1.5rem;
+    transition: color 0.3s ease;
+}
+
+.game-card p {
+    color: var(--card-description);
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+    transition: color 0.3s ease;
+}
+
+.play-button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: var(--button-bg);
+    color: var(--button-text);
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.play-button:hover {
+    background-color: var(--button-hover);
+}
+
+/* 即将推出的游戏按钮样式 */
+.play-button.coming-soon {
+    background-color: #888;
+    cursor: not-allowed;
+}
+
+.play-button.coming-soon:hover {
+    background-color: #777;
+}
+
+/* 响应式布局调整 */
+@media (max-width: 768px) {
+    .container {
+        padding: 10px;
+    }
+
+    .header h1 {
+        font-size: 2rem;
+    }
+
+    .games-grid {
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 15px;
+    }
+
+    .game-card {
+        padding: 15px;
+    }
+
+    .game-card h3 {
+        font-size: 1.2rem;
+    }
+}
+
+/* Footer样式 */
+.footer {
+    margin-top: 3rem;
+    padding: 2rem 0;
+    background-color: var(--card-bg);
+    border-top: 1px solid var(--card-shadow);
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+    text-align: center;
+    color: var(--text-color);
+}
+
+.footer-content p {
+    margin: 0.5rem 0;
+    font-size: 0.9rem;
+    line-height: 1.5;
+}
+
+.footer-content a {
+    color: var(--text-color);
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+.footer-content a:hover {
+    color: var(--header-color);
+}
+
+/* Footer logo样式 */
+.footer-logo {
+    height: 20px;
+    width: auto;
+    vertical-align: middle;
+    margin-right: 4px;
+    display: inline-block;
+    position: relative;
+    top: -2px; /* 微调垂直位置 */
+}
+
+@media (max-width: 768px) {
+    .footer {
+        padding: 1.5rem 0;
+    }
+    
+    .footer-content p {
+        font-size: 0.8rem;
+    }
+}

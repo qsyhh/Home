@@ -35,8 +35,6 @@ const rollAroundCap = (cap, ball) => {
   );
 
   // 撞击方向与球期望移动方向之间的角度
-  // 角度越小，撞击力越大
-  // 越接近90度，滚动越平滑（90度时无碰撞）
   let impactHeadingAngle = impactAngle - heading;
 
   // 未发生撞击时的速度大小
@@ -79,7 +77,13 @@ const slow = (number, difference) => {
 
 const mazeElement = document.getElementById("maze");
 const joystickHeadElement = document.getElementById("joystick-head");
-const noteElement = document.getElementById("note"); // 用于显示说明、游戏胜利和失败文本的元素
+const noteElement = document.getElementById("note");
+const joystickElement = document.getElementById("joystick");
+
+// 陀螺仪相关变量
+let gyroEnabled = false;
+let gyroSensitivity = 1.2; // 陀螺仪灵敏度
+let gyroPermissionGranted = false;
 
 let hardMode = false;
 let previousTimestamp;
@@ -106,6 +110,80 @@ let holeElements = [];
 joystickHeadElement.style.width = "60px";
 joystickHeadElement.style.height = "60px";
 joystickHeadElement.style.touchAction = "none"; // 阻止触摸时页面滚动
+
+// 检测陀螺仪支持并初始化
+function initGyro() {
+  if (window.DeviceMotionEvent) {
+    // 添加陀螺仪模式切换按钮功能
+    noteElement.addEventListener('click', async () => {
+      if (!gyroPermissionGranted && DeviceMotionEvent.requestPermission) {
+        try {
+          const permission = await DeviceMotionEvent.requestPermission();
+          if (permission === 'granted') {
+            gyroPermissionGranted = true;
+            toggleGyroMode();
+          }
+        } catch (err) {
+          console.error('获取陀螺仪权限失败:', err);
+        }
+      } else {
+        toggleGyroMode();
+      }
+    });
+
+    // 非iOS设备直接启用陀螺仪支持
+    if (!DeviceMotionEvent.requestPermission) {
+      gyroPermissionGranted = true;
+    }
+  } else {
+    noteElement.innerHTML += "<p>您的设备不支持陀螺仪控制</p>";
+  }
+}
+
+// 切换陀螺仪模式
+function toggleGyroMode() {
+  gyroEnabled = !gyroEnabled;
+  
+  if (gyroEnabled) {
+    window.addEventListener('devicemotion', handleGyroData);
+    joystickElement.style.opacity = 0.5; // 陀螺仪模式下降低操纵杆透明度
+    noteElement.innerHTML += "<p>已切换到陀螺仪模式，点击切换回触摸模式</p>";
+  } else {
+    window.removeEventListener('devicemotion', handleGyroData);
+    joystickElement.style.opacity = 1; // 恢复操纵杆透明度
+    noteElement.innerHTML += "<p>已切换到触摸模式，点击切换到陀螺仪模式</p>";
+  }
+}
+
+// 处理陀螺仪数据
+function handleGyroData(event) {
+  if (!gameInProgress || !gyroEnabled) return;
+  
+  // 获取设备倾斜角度（beta是前后倾斜，gamma是左右倾斜）
+  const beta = event.beta || 0; // 前后倾斜角度 (-180 到 180)
+  const gamma = event.gamma || 0; // 左右倾斜角度 (-90 到 90)
+  
+  // 将陀螺仪数据转换为加速度
+  const gravity = 2;
+  const friction = 0.01;
+  
+  // 处理角度数据，限制范围并应用灵敏度
+  const limitedBeta = Math.minmax(beta, 20) * gyroSensitivity;
+  const limitedGamma = Math.minmax(gamma, 20) * gyroSensitivity;
+  
+  // 计算加速度和摩擦力
+  accelerationX = gravity * Math.sin((limitedGamma / 180) * Math.PI);
+  accelerationY = gravity * Math.sin((limitedBeta / 180) * Math.PI);
+  frictionX = gravity * Math.cos((limitedGamma / 180) * Math.PI) * friction;
+  frictionY = gravity * Math.cos((limitedBeta / 180) * Math.PI) * friction;
+  
+  // 根据陀螺仪数据旋转迷宫
+  const rotationY = limitedGamma * 0.8;
+  const rotationX = limitedBeta * 0.8;
+  mazeElement.style.cssText = `
+    transform: rotateY(${rotationY}deg) rotateX(${-rotationX}deg)
+  `;
+}
 
 resetGame();
 
@@ -246,8 +324,8 @@ joystickHeadElement.addEventListener("mousedown", startInteraction);
 
 // 触摸开始事件（手机端）
 joystickHeadElement.addEventListener("touchstart", (e) => {
-  e.preventDefault(); // 阻止触摸时页面滚动
-  startInteraction(e.touches[0]); // 用第一个触摸点模拟鼠标事件
+  e.preventDefault();
+  startInteraction(e.touches[0]);
 });
 
 // 统一处理交互开始（鼠标/触摸）
@@ -261,7 +339,7 @@ function startInteraction(event) {
     joystickHeadElement.style.cssText = `
           animation: none;
           cursor: grabbing;
-          -webkit-tap-highlight-color: transparent; /* 移除手机端点击高亮 */
+          -webkit-tap-highlight-color: transparent;
         `;
   }
 }
@@ -271,15 +349,15 @@ window.addEventListener("mousemove", handleMove);
 
 // 触摸移动事件（手机端）
 window.addEventListener("touchmove", (e) => {
-  e.preventDefault(); // 阻止触摸滑动时页面滚动
-  if (gameInProgress) {
-    handleMove(e.touches[0]); // 用第一个触摸点模拟鼠标移动
+  e.preventDefault();
+  if (gameInProgress && !gyroEnabled) { // 陀螺仪模式下不处理触摸移动
+    handleMove(e.touches[0]);
   }
 });
 
 // 统一处理移动逻辑（鼠标/触摸）
 function handleMove(event) {
-  if (gameInProgress) {
+  if (gameInProgress && !gyroEnabled) { // 只有在非陀螺仪模式下才处理
     const deltaX = -Math.minmax(startX - event.clientX, 15);
     const deltaY = -Math.minmax(startY - event.clientY, 15);
 
@@ -290,7 +368,7 @@ function handleMove(event) {
           cursor: grabbing;
         `;
 
-    const rotationY = deltaX * 0.8; // 最大旋转角度 = 12
+    const rotationY = deltaX * 0.8;
     const rotationX = deltaY * 0.8;
 
     mazeElement.style.cssText = `
@@ -298,7 +376,7 @@ function handleMove(event) {
         `;
 
     const gravity = 2;
-    const friction = 0.01; // 摩擦系数
+    const friction = 0.01;
 
     accelerationX = gravity * Math.sin((rotationY / 180) * Math.PI);
     accelerationY = gravity * Math.sin((rotationX / 180) * Math.PI);
@@ -316,31 +394,39 @@ window.addEventListener("touchend", endInteraction);
 // 统一处理交互结束
 function endInteraction() {
   // 保持游戏继续（松手后球因惯性继续移动）
-  // 若需要松手后停止，可在此处设置 gameInProgress = false
 }
 
 window.addEventListener("keydown", function (event) {
-  // 如果按下的不是箭头键、空格或H，则返回
-  if (![" ", "H", "h", "E", "e"].includes(event.key)) return;
+  // 如果按下的不是目标键，则返回
+  if (![" ", "H", "h", "E", "e", "G", "g"].includes(event.key)) return;
 
-  // 如果按下的是箭头键，首先阻止默认行为
   event.preventDefault();
 
-  // 如果按下的是空格，重新开始游戏
-  if (event.key == " ") {
+  // 空格：重新开始游戏
+  if (event.key === " ") {
     resetGame();
     return;
   }
 
-  // 设置困难模式
-  if (event.key == "H" || event.key == "h") {
+  // G键：切换陀螺仪模式
+  if (event.key === "G" || event.key === "g") {
+    if (gyroPermissionGranted || !DeviceMotionEvent.requestPermission) {
+      toggleGyroMode();
+    } else {
+      noteElement.innerHTML = "请点击屏幕获取陀螺仪权限";
+    }
+    return;
+  }
+
+  // H键：困难模式
+  if (event.key === "H" || event.key === "h") {
     hardMode = true;
     resetGame();
     return;
   }
 
-  // 设置简单模式
-  if (event.key == "E" || event.key == "e") {
+  // E键：简单模式
+  if (event.key === "E" || event.key === "e") {
     hardMode = false;
     resetGame();
     return;
@@ -358,27 +444,31 @@ function resetGame() {
   frictionY = undefined;
 
   mazeElement.style.cssText = `
-        transform: rotateY(0deg) rotateX(0deg)
-      `;
+    transform: rotateY(0deg) rotateX(0deg)
+  `;
 
   joystickHeadElement.style.cssText = `
-        left: 0;
-        top: 0;
-        width: 60px;
-        height: 60px;
-        animation: glow;
-        cursor: grab;
-      `;
+    left: 0;
+    top: 0;
+    width: 60px;
+    height: 60px;
+    animation: glow;
+    cursor: grab;
+  `;
 
+  // 更新提示文本（包含陀螺仪说明）
   if (hardMode) {
     noteElement.innerHTML = `点击或触摸操纵杆开始游戏！
-          <p>困难模式，避开黑洞。返回简单模式？按E</p>`;
+      <p>困难模式，避开黑洞。返回简单模式？按E</p>
+      <p>按G切换陀螺仪模式，点击屏幕获取权限</p>`;
   } else {
     noteElement.innerHTML = `点击或触摸操纵杆开始游戏！
-          <p>将所有球移到中心。准备好挑战困难模式了吗？按H</p>`;
+      <p>将所有球移到中心。准备好挑战困难模式了吗？按H</p>
+      <p>按G切换陀螺仪模式，点击屏幕获取权限</p>`;
   }
   noteElement.style.opacity = 1;
 
+  // 重置球的位置
   balls = [
     { column: 0, row: 0 },
     { column: 9, row: 0 },
@@ -391,33 +481,31 @@ function resetGame() {
     velocityY: 0,
   }));
 
+  // 更新球的UI位置
   if (ballElements.length) {
     balls.forEach(({ x, y }, index) => {
       ballElements[index].style.cssText = `left: ${x}px; top: ${y}px; `;
     });
   }
 
-  // 移除之前的黑洞元素
+  // 移除并重置黑洞元素
   holeElements.forEach((holeElement) => {
     mazeElement.removeChild(holeElement);
   });
   holeElements = [];
 
-  // 如果是困难模式，重置黑洞元素
   if (hardMode) {
     holes.forEach(({ x, y }) => {
-      const ball = document.createElement("div");
-      ball.setAttribute("class", "black-hole");
-      ball.style.cssText = `left: ${x}px; top: ${y}px; `;
-
-      mazeElement.appendChild(ball);
-      holeElements.push(ball);
+      const hole = document.createElement("div");
+      hole.setAttribute("class", "black-hole");
+      hole.style.cssText = `left: ${x}px; top: ${y}px; `;
+      mazeElement.appendChild(hole);
+      holeElements.push(hole);
     });
   }
 }
 
 function main(timestamp) {
-  // 可能在游戏中途重置，这种情况下循环应该停止
   if (!gameInProgress) return;
 
   if (previousTimestamp === undefined) {
@@ -427,52 +515,43 @@ function main(timestamp) {
   }
 
   const maxVelocity = 1.5;
-
-  // 自上一周期以来经过的时间除以16
-  // 此函数平均每16毫秒调用一次，因此除以16的结果为1
   const timeElapsed = (timestamp - previousTimestamp) / 16;
 
   try {
-    // 如果未移动，则不执行任何操作
-    if (accelerationX != undefined && accelerationY != undefined) {
+    if (accelerationX !== undefined && accelerationY !== undefined) {
       const velocityChangeX = accelerationX * timeElapsed;
       const velocityChangeY = accelerationY * timeElapsed;
       const frictionDeltaX = frictionX * timeElapsed;
       const frictionDeltaY = frictionY * timeElapsed;
 
       balls.forEach((ball) => {
-        if (velocityChangeX == 0) {
-          // 无旋转，平面是平的
-          // 在平面上，摩擦力只能减慢速度，不能反转运动
+        // 更新X方向速度（含摩擦）
+        if (velocityChangeX === 0) {
           ball.velocityX = slow(ball.velocityX, frictionDeltaX);
         } else {
-          ball.velocityX = ball.velocityX + velocityChangeX;
+          ball.velocityX += velocityChangeX;
           ball.velocityX = Math.max(Math.min(ball.velocityX, 1.5), -1.5);
-          ball.velocityX =
-            ball.velocityX - Math.sign(velocityChangeX) * frictionDeltaX;
+          ball.velocityX -= Math.sign(velocityChangeX) * frictionDeltaX;
           ball.velocityX = Math.minmax(ball.velocityX, maxVelocity);
         }
 
-        if (velocityChangeY == 0) {
-          // 无旋转，平面是平的
-          // 在平面上，摩擦力只能减慢速度，不能反转运动
+        // 更新Y方向速度（含摩擦）
+        if (velocityChangeY === 0) {
           ball.velocityY = slow(ball.velocityY, frictionDeltaY);
         } else {
-          ball.velocityY = ball.velocityY + velocityChangeY;
-          ball.velocityY =
-            ball.velocityY - Math.sign(velocityChangeY) * frictionDeltaY;
+          ball.velocityY += velocityChangeY;
+          ball.velocityY -= Math.sign(velocityChangeY) * frictionDeltaY;
           ball.velocityY = Math.minmax(ball.velocityY, maxVelocity);
         }
 
-        // 初步的下一个球位置，仅在没有碰撞发生时有效
+        // 计算下一位置
         ball.nextX = ball.x + ball.velocityX;
         ball.nextY = ball.y + ball.velocityY;
 
-        if (debugMode) console.log("滴答", ball);
-
+        // 碰撞检测（墙）
         walls.forEach((wall, wi) => {
           if (wall.horizontal) {
-            // 水平墙
+            // 水平墙碰撞处理
             if (
               ball.nextY + ballSize / 2 >= wall.y - wallW / 2 &&
               ball.nextY - ballSize / 2 <= wall.y + wallW / 2
@@ -480,46 +559,43 @@ function main(timestamp) {
               const wallStart = { x: wall.x, y: wall.y };
               const wallEnd = { x: wall.x + wall.length, y: wall.y };
 
+              // 墙头部碰撞
               if (
                 ball.nextX + ballSize / 2 >= wallStart.x - wallW / 2 &&
                 ball.nextX < wallStart.x
               ) {
                 const distance = distance2D(wallStart, { x: ball.nextX, y: ball.nextY });
                 if (distance < ballSize / 2 + wallW / 2) {
-                  if (debugMode && wi > 4)
-                    console.warn("离水平墙头部太近", distance, ball);
                   const closest = closestItCanBe(wallStart, { x: ball.nextX, y: ball.nextY });
                   const rolled = rollAroundCap(wallStart, { ...closest, velocityX: ball.velocityX, velocityY: ball.velocityY });
                   Object.assign(ball, rolled);
                 }
               }
 
+              // 墙尾部碰撞
               if (
                 ball.nextX - ballSize / 2 <= wallEnd.x + wallW / 2 &&
                 ball.nextX > wallEnd.x
               ) {
                 const distance = distance2D(wallEnd, { x: ball.nextX, y: ball.nextY });
                 if (distance < ballSize / 2 + wallW / 2) {
-                  if (debugMode && wi > 4)
-                    console.warn("离水平墙尾部太近", distance, ball);
                   const closest = closestItCanBe(wallEnd, { x: ball.nextX, y: ball.nextY });
                   const rolled = rollAroundCap(wallEnd, { ...closest, velocityX: ball.velocityX, velocityY: ball.velocityY });
                   Object.assign(ball, rolled);
                 }
               }
 
+              // 墙中间碰撞
               if (ball.nextX >= wallStart.x && ball.nextX <= wallEnd.x) {
                 ball.nextY = ball.nextY < wall.y 
                   ? wall.y - wallW / 2 - ballSize / 2 
                   : wall.y + wallW / 2 + ballSize / 2;
                 ball.y = ball.nextY;
                 ball.velocityY = -ball.velocityY / 3;
-                if (debugMode && wi > 4)
-                  console.error("穿过水平线，发生碰撞", ball);
               }
             }
           } else {
-            // 垂直墙
+            // 垂直墙碰撞处理
             if (
               ball.nextX + ballSize / 2 >= wall.x - wallW / 2 &&
               ball.nextX - ballSize / 2 <= wall.x + wallW / 2
@@ -527,48 +603,45 @@ function main(timestamp) {
               const wallStart = { x: wall.x, y: wall.y };
               const wallEnd = { x: wall.x, y: wall.y + wall.length };
 
+              // 墙头部碰撞
               if (
                 ball.nextY + ballSize / 2 >= wallStart.y - wallW / 2 &&
                 ball.nextY < wallStart.y
               ) {
                 const distance = distance2D(wallStart, { x: ball.nextX, y: ball.nextY });
                 if (distance < ballSize / 2 + wallW / 2) {
-                  if (debugMode && wi > 4)
-                    console.warn("离垂直墙头部太近", distance, ball);
                   const closest = closestItCanBe(wallStart, { x: ball.nextX, y: ball.nextY });
                   const rolled = rollAroundCap(wallStart, { ...closest, velocityX: ball.velocityX, velocityY: ball.velocityY });
                   Object.assign(ball, rolled);
                 }
               }
 
+              // 墙尾部碰撞
               if (
                 ball.nextY - ballSize / 2 <= wallEnd.y + wallW / 2 &&
                 ball.nextY > wallEnd.y
               ) {
                 const distance = distance2D(wallEnd, { x: ball.nextX, y: ball.nextY });
                 if (distance < ballSize / 2 + wallW / 2) {
-                  if (debugMode && wi > 4)
-                    console.warn("离垂直墙尾部太近", distance, ball);
                   const closest = closestItCanBe(wallEnd, { x: ball.nextX, y: ball.nextY });
                   const rolled = rollAroundCap(wallEnd, { ...closest, velocityX: ball.velocityX, velocityY: ball.velocityY });
                   Object.assign(ball, rolled);
                 }
               }
 
+              // 墙中间碰撞
               if (ball.nextY >= wallStart.y && ball.nextY <= wallEnd.y) {
                 ball.nextX = ball.nextX < wall.x 
                   ? wall.x - wallW / 2 - ballSize / 2 
                   : wall.x + wallW / 2 + ballSize / 2;
                 ball.x = ball.nextX;
                 ball.velocityX = -ball.velocityX / 3;
-                if (debugMode && wi > 4)
-                  console.error("穿过垂直线，发生碰撞", ball);
               }
             }
           }
         });
 
-        // 检测球是否落入黑洞
+        // 黑洞碰撞检测（困难模式）
         if (hardMode) {
           holes.forEach((hole, hi) => {
             const distance = distance2D(hole, { x: ball.nextX, y: ball.nextY });
@@ -579,25 +652,25 @@ function main(timestamp) {
           });
         }
 
-        // 调整球的位置
-        ball.x = ball.x + ball.velocityX;
-        ball.y = ball.y + ball.velocityY;
+        // 更新球位置
+        ball.x += ball.velocityX;
+        ball.y += ball.velocityY;
       });
 
-      // 更新UI位置
+      // 更新球的UI
       balls.forEach(({ x, y }, index) => {
         ballElements[index].style.cssText = `left: ${x}px; top: ${y}px; `;
       });
     }
 
-    // 胜利检测
+    // 胜利检测（所有球到达中心）
     if (
       balls.every(
         (ball) => distance2D(ball, { x: 350 / 2, y: 315 / 2 }) < 65 / 2
       )
     ) {
       noteElement.innerHTML = `恭喜，你成功了！
-          ${!hardMode ? "<p>按H进入困难模式</p>" : ""}`;
+        ${!hardMode ? "<p>按H进入困难模式</p>" : ""}`;
       noteElement.style.opacity = 1;
       gameInProgress = false;
     } else {
@@ -605,11 +678,14 @@ function main(timestamp) {
       window.requestAnimationFrame(main);
     }
   } catch (error) {
-    if (error.message == "球落入了黑洞") {
+    if (error.message === "球落入了黑洞") {
       noteElement.innerHTML = `有一个球落入了黑洞！按空格键重置游戏。
-          <p>返回简单模式？按E</p>`;
+        <p>返回简单模式？按E</p>`;
       noteElement.style.opacity = 1;
       gameInProgress = false;
     } else throw error;
   }
 }
+
+// 初始化陀螺仪
+initGyro();

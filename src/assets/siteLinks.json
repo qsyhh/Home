@@ -38,5 +38,25 @@
     "icon": "Fire",
     "name": "扫雷 -游戏",
     "link": "https://xiaoyu.qsyhh.xyz/games/SL/index"
+  },
+  {
+    "icon": "Fire",
+    "name": "俄罗斯方块 -游戏",
+    "link": "https://xiaoyu.qsyhh.xyz/games/FK/index"
+  },
+  {
+    "icon": "Fire",
+    "name": "五子棋 -游戏",
+    "link": "https://xiaoyu.qsyhh.xyz/games/WZQ/index"
+  },
+    {
+    "icon": "Fire",
+    "name": "数独 -游戏",
+    "link": "https://xiaoyu.qsyhh.xyz/games/SD/index"
+  },
+  {
+    "icon": "Fire",
+    "name": "五子棋 -游戏",
+    "link": "https://xiaoyu.qsyhh.xyz/games/MG/index"
   }
 ]
