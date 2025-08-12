@@ -224,7 +224,7 @@ watch(() => store.getPlayerLrc, (_new, _old) => {
   background-clip: text;
   font-family: MiSans VF;
   font-weight: 520;
-  font-size: 1.05rem;
+  font-size: 1.05rem; /* 电脑端原始字体大小 */
   transition:
     opacity 0.3s linear,
     color 0.5s linear,
@@ -376,7 +376,7 @@ watch(() => store.getPlayerLrc, (_new, _old) => {
     0px 0px 2px rgba(230, 230, 250, 0.9);
   font-family: MiSans VF;
   font-weight: 520;
-  font-size: 1.05rem;
+  font-size: 1.05rem; /* 电脑端原始字体大小 */
   overflow: hidden;
   white-space: nowrap;
   transition:
@@ -397,7 +397,7 @@ watch(() => store.getPlayerLrc, (_new, _old) => {
     0 0 2px rgba(255, 179, 71, 1);
   font-family: MiSans VF;
   font-weight: 520;
-  font-size: 1.05rem;
+  font-size: 1.05rem; /* 电脑端原始字体大小 */
   transition:
     opacity 0.3s linear,
     color 0.5s linear;
@@ -414,7 +414,7 @@ watch(() => store.getPlayerLrc, (_new, _old) => {
   line-height: 46px;
   text-align: center;
   z-index: 0;
-  font-size: 1rem;
+  font-size: 1rem; /* 电脑端原始字体大小 */
   // 文字不换行
   word-break: keep-all;
   white-space: nowrap;
@@ -492,7 +492,7 @@ watch(() => store.getPlayerLrc, (_new, _old) => {
       display: inline-block;
       padding: 0 10px;
       white-space: nowrap;
-      font-size: 1.05rem;
+      font-size: 1.05rem; /* 电脑端原始字体大小 */
       opacity: 0.6;
       transition: opacity 0.3s, color 0.3s;
     }
@@ -511,7 +511,7 @@ watch(() => store.getPlayerLrc, (_new, _old) => {
     -webkit-backdrop-filter: blur(10px);
     backdrop-filter: blur(10px);
     background: rgb(0 0 0 / 25%);
-    font-size: 1rem;
+    font-size: 1rem; /* 电脑端原始字体大小 */
   }
 
   .fade-enter-active,
@@ -533,13 +533,13 @@ watch(() => store.getPlayerLrc, (_new, _old) => {
     transform: translateY(0);
   }
 
-  // 移动端字体大小调整
-  @media (max-width: 720px) {
+  // 仅对手机端(小屏幕)应用字体缩小
+  @media (max-width: 768px) { /* 768px是常见的移动端和桌面端分界点 */
     font-size: 0.75rem;
     &.blur {
       font-size: 0.75rem;
     }
-    .dwrc-char, #dwrc-2-wrap, .lrc-char {
+    .dwrc-char, #dwrc-2-wrap, .lrc-char, .lrc-line {
       font-size: 0.9rem;
     }
   }
@@ -552,7 +552,7 @@ watch(() => store.getPlayerLrc, (_new, _old) => {
     .c-hidden {
       display: inline;
     }
-    .dwrc-char, #dwrc-2-wrap, .lrc-char {
+    .dwrc-char, #dwrc-2-wrap, .lrc-char, .lrc-line {
       font-size: 0.85rem;
     }
   }
@@ -565,7 +565,7 @@ watch(() => store.getPlayerLrc, (_new, _old) => {
     .hidden {
       display: inline;
     }
-    .dwrc-char, #dwrc-2-wrap, .lrc-char {
+    .dwrc-char, #dwrc-2-wrap, .lrc-char, .lrc-line {
       font-size: 0.8rem;
     }
     // 针对极小屏幕额外调整内边距
@@ -579,7 +579,7 @@ watch(() => store.getPlayerLrc, (_new, _old) => {
     &.blur {
       font-size: 0.6rem;
     }
-    .dwrc-char, #dwrc-2-wrap, .lrc-char {
+    .dwrc-char, #dwrc-2-wrap, .lrc-char, .lrc-line {
       font-size: 0.75rem;
     }
   }
