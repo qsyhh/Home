@@ -1,9 +1,9 @@
 // 游戏配置常量（降低难度版本）
 const GAME_CONFIG = {
   FPS: 40,
-  JUMP_VELOCITY: -12, // 增强跳跃力度（更易上升）
+  JUMP_VELOCITY: -8.5, // 增强跳跃力度（更易上升）
   MAX_FALL_SPEED: 8, // 降低最大下落速度
-  GRAVITY: 0.8, // 减小重力（下落更慢）
+  GRAVITY: 0.5, // 减小重力（下落更慢）
   PIPE_SPEED: -1.5, // 减慢管道速度（反应时间更长）
   PIPE_GAP_MIN: 150, // 增大管道最小间隙
   PIPE_GAP_MAX: 250, // 增大管道最大间隙

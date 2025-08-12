@@ -533,26 +533,56 @@ watch(() => store.getPlayerLrc, (_new, _old) => {
     transform: translateY(0);
   }
 
-@media (max-width: 720px) {
-  font-size: 0.8rem;
-
-  &.blur {
-    font-size: 0.8rem;
+  // 移动端字体大小调整
+  @media (max-width: 720px) {
+    font-size: 0.75rem;
+    &.blur {
+      font-size: 0.75rem;
+    }
+    .dwrc-char, #dwrc-2-wrap, .lrc-char {
+      font-size: 0.9rem;
+    }
   }
-}
 
-@media (max-width: 560px) {
-  .c-hidden {
-    display: inline;
+  @media (max-width: 560px) {
+    font-size: 0.7rem;
+    &.blur {
+      font-size: 0.7rem;
+    }
+    .c-hidden {
+      display: inline;
+    }
+    .dwrc-char, #dwrc-2-wrap, .lrc-char {
+      font-size: 0.85rem;
+    }
   }
-  font-size: 0.75rem;
-}
 
-@media (max-width: 480px) {
-  .hidden {
-    display: inline;
+  @media (max-width: 480px) {
+    font-size: 0.65rem;
+    &.blur {
+      font-size: 0.65rem;
+    }
+    .hidden {
+      display: inline;
+    }
+    .dwrc-char, #dwrc-2-wrap, .lrc-char {
+      font-size: 0.8rem;
+    }
+    // 针对极小屏幕额外调整内边距
+    .lrc {
+      padding: 0 10px;
+    }
   }
-  font-size: 0.7rem;
+
+  @media (max-width: 360px) {
+    font-size: 0.6rem;
+    &.blur {
+      font-size: 0.6rem;
+    }
+    .dwrc-char, #dwrc-2-wrap, .lrc-char {
+      font-size: 0.75rem;
+    }
   }
 }
 </style>
+    
