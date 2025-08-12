@@ -26,14 +26,13 @@
         <ProgressBar v-if="store.footerProgressBar" />
         <Transition name="fade" mode="out-in" :id="`lrc-line-${store.playerLrc[0][2]}`"
           v-if="!(!store.dwrcEnable || store.dwrcTemp.length == 0 || store.dwrcLoading)">
-          <!-- &amp; -->
-          <!-- 逐字模块山 -->
+          <!-- 逐字模块 -->
           <div class="lrc-all"
             :key="store.playerLrc.length != 0 ? `lrc-line-${store.playerLrc[0][2]}` : `lrc-line-null`">
             <music-one theme="filled" size="18" fill="#efefef" />
             &nbsp;
             <Icon size="20" style="transform: rotate(-18deg);" class="paws-1">
-              <paw />
+              <Paw />
             </Icon>
             <span class="dwrc-box">
               <span class="dwrc-2 lrc-text text-hidden" id="dwrc-2-wrap">
@@ -52,7 +51,7 @@
               </span>
             </span>
             <Icon size="20" style="transform: rotate(18deg);" class="paws-2">
-              <paw />
+              <Paw />
             </Icon>
             &nbsp;
             <music-one theme="filled" size="18" fill="#efefef" />
@@ -65,11 +64,11 @@
             <music-one theme="filled" size="18" fill="#efefef" />
             &nbsp;
             <Icon size="20" style="transform: rotate(-18deg);" class="paws-3">
-              <paw />
+              <Paw />
             </Icon>
             <span class="lrc-text text-hidden" v-html="store.getPlayerLrc[0][4]" :class="`lrc-char`" />
             <Icon size="20" style="transform: rotate(18deg);" class="paws-4">
-              <paw />
+              <Paw />
             </Icon>
             &nbsp;
             <music-one theme="filled" size="18" fill="#efefef" />
@@ -100,7 +99,6 @@ const audio = ref(null);
 const icon = ref(null);
 
 // 加载配置数据
-// const siteStartDate = ref(import.meta.env.VITE_SITE_START);
 const startYear = ref<number | null>(
   import.meta.env.VITE_SITE_START?.length >= 4 ?
     parseInt(import.meta.env.VITE_SITE_START.substring(0, 4)) : null
@@ -213,7 +211,6 @@ watch(() => store.getPlayerLrc, (_new, _old) => {
     inputItem.setAttribute("data-start", "true");
   };
 });
-
 </script>
 
 <style lang="scss" scoped>
@@ -544,15 +541,16 @@ watch(() => store.getPlayerLrc, (_new, _old) => {
     }
   }
 
-@media (max-width: 560px) {
-  .c-hidden {
-    display: inline;
+  @media (max-width: 560px) {
+    .c-hidden {
+      display: inline;
+    }
   }
-}
 
-@media (max-width: 480px) {
-  .hidden {
-    display: inline;
+  @media (max-width: 480px) {
+    .hidden {
+      display: inline;
+    }
   }
 }
 </style>

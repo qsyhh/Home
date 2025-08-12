@@ -125,7 +125,7 @@ const {
 } = storeToRefs(store);
 
 // 默认选中项
-const activeName = ref("0");
+const activeName = ref("3");
 
 // 壁纸切换
 const radioChange = () => {
