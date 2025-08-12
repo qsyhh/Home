@@ -544,16 +544,15 @@ watch(() => store.getPlayerLrc, (_new, _old) => {
     }
   }
 
-  @media (max-width: 560px) {
-    .c-hidden {
-      display: none;
-    }
+@media (max-width: 560px) {
+  .c-hidden {
+    display: inline;
   }
+}
 
-  @media (max-width: 480px) {
-    .hidden {
-      display: none;
-    }
+@media (max-width: 480px) {
+  .hidden {
+    display: inline;
   }
 }
 </style>
