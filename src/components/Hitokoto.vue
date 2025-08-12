@@ -32,8 +32,8 @@ const openMusicShow = ref(false);
 
 // 一言数据
 const hitokotoData = reactive({
-  text: "这里应该显示一句话",
-  from: "無名",
+  text: "错误：这里应该显示一句话",
+  from: "小雨",
 });
 
 // 获取一言数据
@@ -50,8 +50,8 @@ const getHitokotoData = async () => {
         fill: "#efefef",
       }),
     });
-    hitokotoData.text = "这里应该显示一句话";
-    hitokotoData.from = "無名";
+    hitokotoData.text = "错误：这里应该显示一句话";
+    hitokotoData.from = "小雨";
     if (store.webSpeech) {
       stopSpeech();
       const voice = import.meta.env.VITE_TTS_Voice;
