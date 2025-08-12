@@ -533,24 +533,26 @@ watch(() => store.getPlayerLrc, (_new, _old) => {
     transform: translateY(0);
   }
 
-  @media (max-width: 720px) {
-    font-size: 0.9rem;
+@media (max-width: 720px) {
+  font-size: 0.8rem;
 
-    &.blur {
-      font-size: 0.9rem;
-    }
+  &.blur {
+    font-size: 0.8rem;
   }
+}
 
-  @media (max-width: 560px) {
-    .c-hidden {
-      display: inline;
-    }
+@media (max-width: 560px) {
+  .c-hidden {
+    display: inline;
   }
+  font-size: 0.75rem;
+}
 
-  @media (max-width: 480px) {
-    .hidden {
-      display: inline;
-    }
+@media (max-width: 480px) {
+  .hidden {
+    display: inline;
+  }
+  font-size: 0.7rem;
   }
 }
 </style>
