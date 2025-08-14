@@ -20,16 +20,6 @@ document.addEventListener('DOMContentLoaded', function() {
             title: "原神截图",
             url: "https://prod-alicdn-community.kurobbs.com/forum/c2908353508b484fbf8ffe6acc576e8920250814.png",
             category: "YS"
-        },
-        {
-            title: "风景照",
-            url: "https://prod-alicdn-community.kurobbs.com/forum/1cc730feff3048019ec00066fd899c2220250814.png",
-            category: "MJ"
-        },
-        {
-            title: "个人照片",
-            url: "https://prod-alicdn-community.kurobbs.com/forum/1cc730feff3048019ec00066fd899c2220250814.png",
-            category: "GR"
         }
     ];
     
@@ -44,7 +34,8 @@ document.addEventListener('DOMContentLoaded', function() {
     
     // 状态
     let currentFilter = 'all';
-    
+    let isZoomed = false; 
+
     // 初始化
     initGallery();
     
@@ -66,17 +57,34 @@ document.addEventListener('DOMContentLoaded', function() {
         // 关闭查看器事件
         closeViewer.addEventListener('click', function() {
             imageViewer.style.display = 'none';
+            isZoomed = false;
+            viewerImage.style.transform = 'scale(1)';
         });
         
         imageViewer.addEventListener('click', function(e) {
             if (e.target === imageViewer) {
                 imageViewer.style.display = 'none';
+                isZoomed = false;
+                viewerImage.style.transform = 'scale(1)';
             }
         });
         
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape' && imageViewer.style.display === 'flex') {
                 imageViewer.style.display = 'none';
+                isZoomed = false;
+                viewerImage.style.transform = 'scale(1)';
+            }
+        });
+
+        // 图片点击放大事件
+        viewerImage.addEventListener('click', function() {
+            if (isZoomed) {
+                viewerImage.style.transform = 'scale(1)';
+                isZoomed = false;
+            } else {
+                viewerImage.style.transform = 'scale(1.5)'; 
+                isZoomed = true;
             }
         });
     }
@@ -88,6 +96,13 @@ document.addEventListener('DOMContentLoaded', function() {
         const filteredImages = currentFilter === 'all' 
             ? images 
             : images.filter(img => img.category === currentFilter);
+        
+        if (filteredImages.length === 0) {
+            emptyState.style.display = 'block';
+            return;
+        } else {
+            emptyState.style.display = 'none';
+        }
         
         filteredImages.forEach((image) => {
             const card = createImageCard(image);
@@ -112,7 +127,6 @@ document.addEventListener('DOMContentLoaded', function() {
             </div>
             <div class="image-info">
                 <h3 class="image-title">${image.title}</h3>
-                <p class="image-path">${truncateUrl(image.url)}</p>
                 <span class="image-category">${categoryName}</span>
             </div>
         `;
@@ -129,33 +143,27 @@ document.addEventListener('DOMContentLoaded', function() {
     function openImageViewer(image) {
         // 显示加载状态
         viewerImage.src = '';
-        viewerCaption.innerHTML = `<div class="loading-spinner"></div><p>加载中...</p>`;
+        viewerCaption.textContent = ''; 
         imageViewer.style.display = 'flex';
+        isZoomed = false;
+        viewerImage.style.transform = 'scale(1)';
         
         // 加载图片
-        setTimeout(() => {
+        const img = new Image();
+        img.src = image.url;
+        img.onload = function() {
             viewerImage.src = image.url;
             const categoryName = getCategoryName(image.category);
-            
-            viewerImage.onload = function() {
-                viewerCaption.textContent = `${image.title} (${categoryName})`;
-            };
-            
-            viewerImage.onerror = function() {
-                viewerCaption.innerHTML = `
-                    ${image.title} - 图片加载失败<br>
-                    <a href="${image.url}" target="_blank" style="color: #3498db; text-decoration: underline;">
-                        点击直接查看图片
-                    </a>
-                `;
-            };
-        }, 100);
-    }
-    
-    // 辅助函数：截断长URL显示
-    function truncateUrl(url, maxLength = 50) {
-        if (url.length <= maxLength) return url;
-        return url.substring(0, 25) + '...' + url.substring(url.length - 22);
+            viewerCaption.textContent = `${image.title} (${categoryName})`;
+        };
+        img.onerror = function() {
+            viewerCaption.innerHTML = `
+                ${image.title} - 图片加载失败<br>
+                <a href="${image.url}" target="_blank" style="color: #3498db; text-decoration: underline;">
+                    点击直接查看图片
+                </a>
+            `;
+        };
     }
     
     function checkEmptyState() {
