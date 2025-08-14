@@ -13,12 +13,12 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         {
             title: "原神截图",
-            url: "https://prod-alicdn-community.kurobbs.com/forum/056d32bc567b4569a377b23ffb3310d020250814.png'",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/056d32bc567b4569a377b23ffb3310d020250814.png",
             category: "YS"
         },
         {
             title: "原神截图",
-            url: "https://prod-alicdn-community.kurobbs.com/forum/c2908353508b484fbf8ffe6acc576e8920250814.png'",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/c2908353508b484fbf8ffe6acc576e8920250814.png",
             category: "YS"
         },
         {
