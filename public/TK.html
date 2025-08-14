@@ -1,78 +1,42 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>个人图片存储</title>
-  <link rel="stylesheet" href="css/TK.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小雨的图库</title>
+    <link rel="shortcut icon" href="images/icon/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/TK.css">
 </head>
-
 <body>
-  <header>
-    <h1>个人图片存储</h1>
-    <button id="addImageBtn">添加图片</button>
-  </header>
+    <header>
+        <h1>Gitee图床图片画廊</h1>
+    </header>
 
-  <div class="category-buttons">
-    <button class="category-btn active" data-category="all">全部图片</button>
-    <button class="category-btn" data-category="YS">影视截图</button>
-    <button class="category-btn" data-category="MJ">美景</button>
-    <button class="category-btn" data-category="GR">个人照片</button>
-    <button class="category-btn" data-category="QT">其他</button>
-  </div>
-
-  <div id="loadingIndicator" class="loading">
-    <div class="spinner"></div>
-    <p>正在加载图片，请稍候...</p>
-  </div>
-
-  <div id="emptyState" class="hidden">
-    <p>该分类下暂无图片</p>
-    <p>请检查 Img 文件夹是否存在正确的图片。</p>
-  </div>
-
-  <div id="imageGallery">
-    <!-- 图片将通过 JS 动态加载 -->
-  </div>
-
-  <!-- 添加图片模态框 -->
-  <div id="addImageModal" class="modal hidden">
-    <div class="modal-content">
-      <span class="close-modal">&times;</span>
-      <h2>添加新图片</h2>
-      <form id="addImageForm">
-        <div>
-          <label for="imageFile">选择图片：</label>
-          <input type="file" id="imageFile" accept="image/*">
-        </div>
-        <div>
-          <label for="imageName">图片名称：</label>
-          <input type="text" id="imageName" placeholder="给图片起个名字">
-        </div>
-        <div>
-          <label for="imageCategory">选择分类：</label>
-          <select id="imageCategory">
-            <option value="YS">原神截图</option>
-            <option value="MJ">美景</option>
-            <option value="GR">个人照片</option>
-            <option value="QT">其他</option>
-          </select>
-        </div>
-        <button type="submit">保存图片</button>
-        <button type="button" id="cancelAdd">取消</button>
-      </form>
+    <div class="category-filters">
+        <button class="filter-btn active" data-category="all">全部</button>
+        <button class="filter-btn" data-category="YS">原神截图</button>
+        <button class="filter-btn" data-category="MJ">美景</button>
+        <button class="filter-btn" data-category="GR">个人照片</button>
+        <button class="filter-btn" data-category="QT">其他</button>
     </div>
-  </div>
 
-  <!-- 图片查看器 -->
-  <div id="imageViewer" class="modal-viewer hidden">
-    <span class="close-viewer">&times;</span>
-    <img id="viewerImage" src="" alt="图片预览">
-  </div>
+    <div id="imageGallery">
+    </div>
 
-  <script src="js/TK.js"></script>
+    <div class="empty-state" id="emptyState">
+        <i class="fas fa-images"></i>
+        <h3>未找到图片</h3>
+    </div>
+
+    <div class="image-viewer" id="imageViewer">
+        <div class="viewer-content">
+            <button class="close-viewer" id="closeViewer">&times;</button>
+            <img src="" alt="图片预览" class="viewer-image" id="viewerImage">
+            <div class="viewer-caption" id="viewerCaption"></div>
+        </div>
+    </div>
+
+    <script src="js/TK.js"></script>
 </body>
-
 </html>
