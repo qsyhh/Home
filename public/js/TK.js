@@ -3,32 +3,32 @@ document.addEventListener('DOMContentLoaded', function() {
     const images = [
         {
             title: "原神截图",
-            url: "https://prod-alicdn-community.kurobbs.com/forum/023989cec45f459ba2c7a9c229c514f020250814.png?x-oss-process=image%2Fformat%2Cwebp",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/10835dead33a41598657e711d77752e420250814.png",
             category: "YS"
         },
         {
             title: "原神截图",
-            url: "https://prod-alicdn-community.kurobbs.com/forum/1b065b166b694758aaf77646f0f0ece220250814.png?x-oss-process=image%2Fformat%2Cwebpg",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/ba8d6c80fe36408ca026b69fd04a476b20250814.png",
             category: "YS"
         },
         {
             title: "原神截图",
-            url: "https://prod-alicdn-community.kurobbs.com/forum/da6e469415204433a11bd49c7daf1d5d20250814.png?x-oss-process=image%2Fformat%2Cwebp",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/056d32bc567b4569a377b23ffb3310d020250814.png'",
             category: "YS"
         },
         {
             title: "原神截图",
-            url: "https://prod-alicdn-community.kurobbs.com/forum/bf9cf5766a3e472d969f43271c6542a820250814.png?x-oss-process=image%2Fformat%2Cwebp",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/c2908353508b484fbf8ffe6acc576e8920250814.png'",
             category: "YS"
         },
         {
             title: "风景照",
-            url: "https://gitee.com/SHIKEAIXY/img/raw/master/MJ/01.png",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/1cc730feff3048019ec00066fd899c2220250814.png",
             category: "MJ"
         },
         {
             title: "个人照片",
-            url: "https://gitee.com/SHIKEAIXY/img/raw/master/GR/01.png",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/1cc730feff3048019ec00066fd899c2220250814.png",
             category: "GR"
         }
     ];
