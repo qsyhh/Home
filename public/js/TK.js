@@ -1,24 +1,24 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Gitee图床图片
+    // 图床图片
     const images = [
         {
             title: "原神截图",
-            url: "https://gitee.com/SHIKEAIXY/img/raw/master/YS/01.png",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/023989cec45f459ba2c7a9c229c514f020250814.png?x-oss-process=image%2Fformat%2Cwebp",
             category: "YS"
         },
         {
             title: "原神截图",
-            url: "https://gitee.com/SHIKEAIXY/img/raw/master/YS/02.png",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/1b065b166b694758aaf77646f0f0ece220250814.png?x-oss-process=image%2Fformat%2Cwebpg",
             category: "YS"
         },
         {
             title: "原神截图",
-            url: "https://gitee.com/SHIKEAIXY/img/raw/master/YS/03.png",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/da6e469415204433a11bd49c7daf1d5d20250814.png?x-oss-process=image%2Fformat%2Cwebp",
             category: "YS"
         },
         {
             title: "原神截图",
-            url: "https://gitee.com/SHIKEAIXY/img/raw/master/YS/04.png",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/bf9cf5766a3e472d969f43271c6542a820250814.png?x-oss-process=image%2Fformat%2Cwebp",
             category: "YS"
         },
         {
