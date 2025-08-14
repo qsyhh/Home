@@ -29,19 +29,24 @@ body {
   justify-content: center;
   min-height: 100vh;
   margin: 0;
+  padding: 1rem;
+  overflow-x: hidden;
 }
 
 h1 {
-  font-size: 2.75rem;
+  font-size: clamp(1.5rem, 5vw, 2.75rem);
   color: var(--text-color);
+  margin: 0.5rem 0 1rem;
+  text-align: center;
 }
 
 canvas {
   background-color: var(--canvas-color);
   display: block;
   border-radius: 5px;
-  width: 800px;
-  max-width: 96%;
+  width: 100%;
+  max-width: 800px;
+  touch-action: none; /* 禁用触摸的默认行为 */
 }
 
 .btn {
@@ -69,8 +74,10 @@ canvas {
 
 .rules-btn {
   position: absolute;
-  top: 1.875rem;
-  left: 1.875rem;
+  top: 1rem;
+  left: 1rem;
+  padding: 0.5rem 1rem;
+  font-size: 0.9rem;
 }
 
 .rules {
@@ -80,13 +87,35 @@ canvas {
   background-color: var(--sidebar-color);
   color: var(--text-color);
   min-height: 100vh;
-  width: 400px;
-  padding: 3rem;
-  line-height: 1.5;
-  transform: translateX(-400px);
-  transition: transform 1s ease-in-out;
+  width: 85%;
+  max-width: 400px;
+  padding: 2rem 1rem;
+  line-height: 1.6;
+  transform: translateX(-100%);
+  transition: transform 0.3s ease-in-out;
+  z-index: 100;
+}
+
+.rules h2 {
+  margin-top: 0;
+  font-size: 1.5rem;
 }
 
 .rules.show {
   transform: translateX(0);
+}
+
+/* 移动端控制提示 */
+.touch-hint {
+  display: none;
+  color: var(--text-color);
+  margin-top: 1rem;
+  font-size: 0.9rem;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .touch-hint {
+    display: block;
+  }
 }

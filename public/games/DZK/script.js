@@ -1,122 +1,136 @@
+// 获取DOM元素
 const rulesButton = document.getElementById("rules-btn");
 const closeButton = document.getElementById("close-btn");
 const rules = document.getElementById("rules");
 const canvas = document.getElementById("canvas");
 const ctx = canvas.getContext("2d");
-const color = getComputedStyle(document.documentElement).getPropertyValue(
-  "--button-color"
-);
-const secondaryColor = getComputedStyle(
-  document.documentElement
-).getPropertyValue("--sidebar-color");
+
+// 获取CSS变量
+const color = getComputedStyle(document.documentElement).getPropertyValue("--button-color");
+const secondaryColor = getComputedStyle(document.documentElement).getPropertyValue("--sidebar-color");
+
+// 游戏状态变量
 let score = 0;
 const brickRowCount = 9;
 const brickColumnCount = 5;
+const aspectRatio = 4 / 3; // 保持4:3的宽高比
 
-// 保持4:3的宽高比，适合大多数屏幕
-const aspectRatio = 4 / 3;
-
-// 元素
+// 游戏元素配置
 const ball = {
-  x: 0, // 将在resizeCanvas中设置
-  y: 0, // 将在resizeCanvas中设置
-  sizeRatio: 0.0125, // 相对于画布宽度的比例
-  speedRatio: 0.005, // 相对于画布宽度的比例
-  dx: 0, // 将在resizeCanvas中设置
-  dy: 0, // 将在resizeCanvas中设置
-  baseSpeed: 4 // 基础速度，用于比例计算
+  x: 0,
+  y: 0,
+  sizeRatio: 0.015,
+  speedRatio: 0.005,
+  dx: 0,
+  dy: 0,
+  baseSpeed: 4,
+  size: 0,
+  speed: 0,
+  // 新增：记录上一帧位置，用于精确碰撞检测
+  prevX: 0,
+  prevY: 0
 };
 
 const paddle = {
-  x: 0, // 将在resizeCanvas中设置
-  y: 0, // 将在resizeCanvas中设置
-  widthRatio: 0.1, // 相对于画布宽度的比例
-  heightRatio: 0.0125, // 相对于画布宽度的比例
-  speedRatio: 0.01, // 相对于画布宽度的比例
-  dx: 0
+  x: 0,
+  y: 0,
+  widthRatio: 0.15,
+  heightRatio: 0.015,
+  speedRatio: 0.012,
+  dx: 0,
+  w: 0,
+  h: 0,
+  speed: 0
 };
 
 const brickInfo = {
-  widthRatio: 0.0875, // 相对于画布宽度的比例
-  heightRatio: 0.025, // 相对于画布宽度的比例
-  paddingRatio: 0.0125, // 相对于画布宽度的比例
-  offsetXRatio: 0.056, // 相对于画布宽度的比例
-  offsetYRatio: 0.075, // 相对于画布宽度的比例
+  widthRatio: 0.0875,
+  heightRatio: 0.025,
+  paddingRatio: 0.0125,
+  offsetXRatio: 0.056,
+  offsetYRatio: 0.075,
   visible: true,
-  w: 0, // 将在resizeCanvas中设置
-  h: 0, // 将在resizeCanvas中设置
-  padding: 0, // 将在resizeCanvas中设置
-  offsetX: 0, // 将在resizeCanvas中设置
-  offsetY: 0 // 将在resizeCanvas中设置
+  w: 0,
+  h: 0,
+  padding: 0,
+  offsetX: 0,
+  offsetY: 0
 };
 
 let bricks = [];
 
-// 初始化画布尺寸并添加窗口大小改变监听
+// 输入控制变量
+let isDragging = false;
+let touchStartX = 0;
+let paddleStartX = 0;
+
+// 初始化函数
 function initCanvas() {
+  const touchHint = document.createElement('div');
+  touchHint.className = 'touch-hint';
+  touchHint.textContent = '按住并拖动控制挡板';
+  document.body.insertBefore(touchHint, canvas.nextSibling);
+  
   resizeCanvas();
   window.addEventListener('resize', resizeCanvas);
+  setupEventListeners();
 }
 
-// 调整画布尺寸以适应屏幕
+// 响应式画布调整
 function resizeCanvas() {
-  // 获取可用空间的尺寸（考虑窗口大小）
-  const maxWidth = window.innerWidth * 0.95; // 最大宽度为窗口的95%
-  const maxHeight = window.innerHeight * 0.9; // 最大高度为窗口的90%
+  const windowWidth = window.innerWidth;
+  const windowHeight = window.innerHeight;
+  const padding = 20;
   
-  // 根据宽高比计算最佳尺寸
+  const maxWidth = windowWidth - padding * 2;
+  const maxHeight = windowHeight - padding * 2 - 100;
+  
   let newWidth, newHeight;
   
   if (maxWidth / maxHeight > aspectRatio) {
-    // 受高度限制
     newHeight = maxHeight;
     newWidth = newHeight * aspectRatio;
   } else {
-    // 受宽度限制
     newWidth = maxWidth;
     newHeight = newWidth / aspectRatio;
   }
   
-  // 设置画布的实际尺寸（像素）
   canvas.width = newWidth;
   canvas.height = newHeight;
-  
-  // 设置画布的CSS尺寸（确保显示正确）
   canvas.style.width = `${newWidth}px`;
   canvas.style.height = `${newHeight}px`;
   
-  // 更新游戏元素尺寸（基于新的画布尺寸）
   updateGameElementsSize();
-  
-  // 重新创建砖块
   createBricks();
   
-  // 如果游戏已经开始，重新定位球和 paddle
   if (score > 0) {
-    // 保持球相对于画布的位置
     ball.x = canvas.width / 2;
     ball.y = canvas.height / 2;
+    ball.prevX = ball.x;
+    ball.prevY = ball.y;
   }
 }
 
-// 更新游戏元素的尺寸和位置
+// 更新游戏元素尺寸
 function updateGameElementsSize() {
-  // 更新球的属性
+  // 球的属性更新
   ball.size = canvas.width * ball.sizeRatio;
   ball.speed = canvas.width * ball.speedRatio;
-  ball.dx = ball.baseSpeed * (canvas.width / 800); // 基于原始800宽度的比例调整
+  ball.dx = ball.baseSpeed * (canvas.width / 800);
   ball.dy = -ball.baseSpeed * (canvas.width / 800);
   ball.x = canvas.width / 2;
   ball.y = canvas.height / 2;
+  ball.prevX = ball.x;
+  ball.prevY = ball.y;
   
-  // 更新 paddle 的属性
+  // 挡板的属性更新
   paddle.w = canvas.width * paddle.widthRatio;
   paddle.h = canvas.width * paddle.heightRatio;
   paddle.speed = canvas.width * paddle.speedRatio;
   paddle.x = canvas.width / 2 - paddle.w / 2;
   paddle.y = canvas.height - paddle.h * 2;
   
-  // 更新砖块信息
+  // 砖块的属性更新
   brickInfo.w = canvas.width * brickInfo.widthRatio;
   brickInfo.h = canvas.width * brickInfo.heightRatio;
   brickInfo.padding = canvas.width * brickInfo.paddingRatio;
@@ -137,7 +151,7 @@ function createBricks() {
   }
 }
 
-// 绘制元素
+// 绘制函数
 function drawBall() {
   ctx.beginPath();
   ctx.arc(ball.x, ball.y, ball.size, 0, Math.PI * 2);
@@ -151,39 +165,45 @@ function drawPaddle() {
   ctx.rect(paddle.x, paddle.y, paddle.w, paddle.h);
   ctx.fillStyle = color;
   ctx.fill();
+  ctx.strokeStyle = '#ffffff';
+  ctx.lineWidth = 2;
+  ctx.stroke();
   ctx.closePath();
 }
 
 function drawScore() {
-  // 字体大小基于画布宽度的比例
   const fontSize = Math.max(16, canvas.width * 0.025);
   ctx.font = `${fontSize}px "Balsamiq Sans"`;
+  ctx.fillStyle = secondaryColor;
   ctx.fillText(`Score: ${score}`, canvas.width - canvas.width * 0.15, canvas.height * 0.05);
 }
 
 function drawBricks() {
   bricks.forEach((column) => {
     column.forEach((brick) => {
-      ctx.beginPath();
-      ctx.rect(brick.x, brick.y, brick.w, brick.h);
-      ctx.fillStyle = brick.visible ? color : "transparent";
-      ctx.fill();
-      ctx.closePath();
+      if (brick.visible) {
+        ctx.beginPath();
+        ctx.rect(brick.x, brick.y, brick.w, brick.h);
+        ctx.fillStyle = color;
+        ctx.fill();
+        ctx.strokeStyle = '#ffffff';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.closePath();
+      }
     });
   });
 }
 
 function draw() {
-  // 清除画布
   ctx.clearRect(0, 0, canvas.width, canvas.height);
-  // 绘制元素
   drawBall();
   drawPaddle();
   drawScore();
   drawBricks();
 }
 
-// 移动元素
+// 移动函数
 function movePaddle() {
   paddle.x += paddle.dx;
   // 边界检查
@@ -192,44 +212,66 @@ function movePaddle() {
 }
 
 function moveBall() {
+  // 记录当前位置作为下一帧的"上一位置"
+  ball.prevX = ball.x;
+  ball.prevY = ball.y;
+  
+  // 移动球
   ball.x += ball.dx;
   ball.y += ball.dy;
-  // 墙壁碰撞检测
+  
+  // 左右墙壁碰撞
   if (ball.x + ball.size > canvas.width || ball.x - ball.size < 0) {
-    // 左右墙壁
     ball.dx *= -1;
+    // 修正位置，防止卡在墙边
+    if (ball.x + ball.size > canvas.width) ball.x = canvas.width - ball.size;
+    if (ball.x - ball.size < 0) ball.x = ball.size;
   }
+  
+  // 上墙壁碰撞
   if (ball.y - ball.size < 0) {
-    // 上墙壁
     ball.dy *= -1;
+    ball.y = ball.size; // 修正位置
   }
+  
   // 下墙壁（游戏结束）
   if (ball.y + ball.size > canvas.height) {
     showAllBricks();
     score = 0;
-    // 重置球位置
     ball.x = canvas.width / 2;
     ball.y = canvas.height / 2;
+    ball.prevX = ball.x;
+    ball.prevY = ball.y;
+    ball.dx = ball.baseSpeed * (canvas.width / 800) * (Math.random() > 0.5 ? 1 : -1);
+    ball.dy = -ball.baseSpeed * (canvas.width / 800);
   }
-  //  paddle 碰撞检测
+  
+  // 挡板碰撞检测
   if (
-    ball.x - ball.size > paddle.x &&
-    ball.x + ball.size < paddle.x + paddle.w &&
-    ball.y + ball.size > paddle.y
+    ball.y + ball.size > paddle.y &&
+    ball.y - ball.size < paddle.y + paddle.h &&
+    ball.x > paddle.x - ball.size &&
+    ball.x < paddle.x + paddle.w + ball.size
   ) {
-    ball.dy = -ball.speed;
+    const hitPosition = (ball.x - paddle.x) / paddle.w;
+    const angle = (hitPosition - 0.5) * 2 * 0.7;
+    const speed = Math.sqrt(ball.dx * ball.dx + ball.dy * ball.dy);
+    ball.dx = speed * angle;
+    ball.dy = -Math.sqrt(speed * speed - ball.dx * ball.dx);
+    if (ball.dy > 0) ball.dy *= -1;
+    
+    // 修正位置，防止卡在挡板中
+    ball.y = paddle.y - ball.size;
   }
-  // 砖块碰撞检测
+  
+  // 砖块碰撞检测（优化版本）
   bricks.forEach((column) => {
     column.forEach((brick) => {
       if (brick.visible) {
-        if (
-          ball.x - ball.size > brick.x && // 左边界检查
-          ball.x + ball.size < brick.x + brick.w && // 右边界检查
-          ball.y + ball.size > brick.y && // 上边界检查
-          ball.y - ball.size < brick.y + brick.h // 下边界检查
-        ) {
-          ball.dy *= -1;
+        // 检查球是否与砖块碰撞（使用上一帧位置和当前位置判断轨迹）
+        const collided = checkBrickCollision(brick);
+        
+        if (collided) {
           brick.visible = false;
           increaseScore();
         }
@@ -238,11 +280,67 @@ function moveBall() {
   });
 }
 
+// 精确的砖块碰撞检测
+function checkBrickCollision(brick) {
+  // 球的边界
+  const ballLeft = ball.x - ball.size;
+  const ballRight = ball.x + ball.size;
+  const ballTop = ball.y - ball.size;
+  const ballBottom = ball.y + ball.size;
+  
+  // 砖块边界
+  const brickLeft = brick.x;
+  const brickRight = brick.x + brick.w;
+  const brickTop = brick.y;
+  const brickBottom = brick.y + brick.h;
+  
+  // 简单碰撞检测
+  if (
+    ballRight > brickLeft &&
+    ballLeft < brickRight &&
+    ballBottom > brickTop &&
+    ballTop < brickBottom
+  ) {
+    // 确定碰撞方向（使用上一帧位置判断是从哪个方向撞来的）
+    const prevBallLeft = ball.prevX - ball.size;
+    const prevBallRight = ball.prevX + ball.size;
+    const prevBallTop = ball.prevY - ball.size;
+    const prevBallBottom = ball.prevY + ball.size;
+    
+    // 从上方或下方碰撞
+    if (
+      (prevBallTop >= brickBottom && ballTop < brickBottom) ||
+      (prevBallBottom <= brickTop && ballBottom > brickTop)
+    ) {
+      ball.dy *= -1;
+      // 修正位置，防止穿透
+      if (prevBallTop >= brickBottom) ball.y = brickBottom + ball.size;
+      else ball.y = brickTop - ball.size;
+    }
+    // 从左侧或右侧碰撞
+    else if (
+      (prevBallLeft >= brickRight && ballLeft < brickRight) ||
+      (prevBallRight <= brickLeft && ballRight > brickLeft)
+    ) {
+      ball.dx *= -1;
+      // 修正位置，防止穿透
+      if (prevBallLeft >= brickRight) ball.x = brickRight + ball.size;
+      else ball.x = brickLeft - ball.size;
+    }
+    
+    return true;
+  }
+  
+  return false;
+}
+
+// 分数和游戏状态管理
 function increaseScore() {
   score++;
-  // 当所有砖块被清除后重新生成
   if (score % (brickRowCount * brickColumnCount) === 0) {
     showAllBricks();
+    ball.baseSpeed *= 1.1; // 提升难度
+    updateGameElementsSize();
   }
 }
 
@@ -252,68 +350,93 @@ function showAllBricks() {
   });
 }
 
-// 键盘事件处理
+// 输入处理
 function keyDown(e) {
-  // 方向键控制
-  if (e.key === "Right" || e.key === "ArrowRight") paddle.dx = paddle.speed;
-  else if (e.key === "Left" || e.key === "ArrowLeft") paddle.dx = -paddle.speed;
-  // A / D 键控制
-  else if (e.key.toLowerCase() === "d") paddle.dx = paddle.speed;
-  else if (e.key.toLowerCase() === "a") paddle.dx = -paddle.speed;
+  if (e.key === "Right" || e.key === "ArrowRight" || e.key.toLowerCase() === "d") {
+    paddle.dx = paddle.speed;
+  } else if (e.key === "Left" || e.key === "ArrowLeft" || e.key.toLowerCase() === "a") {
+    paddle.dx = -paddle.speed;
+  }
 }
 
 function keyUp(e) {
-  // 松开方向键或 A / D 键时停止移动
-  if (
-    ["Right", "ArrowRight", "Left", "ArrowLeft", "a", "A", "d", "D"].includes(
-      e.key
-    )
-  ) {
+  if (["Right", "ArrowRight", "Left", "ArrowLeft", "a", "A", "d", "D"].includes(e.key)) {
     paddle.dx = 0;
   }
 }
 
-// 触摸和鼠标控制
-let pointerDown = false;
-
-function getPointerX(e) {
-  // 同时支持鼠标与触摸
-  const pointer = e.touches ? e.touches[0] : e;
+function getRelativeX(e) {
   const rect = canvas.getBoundingClientRect();
-  // 将坐标从CSS像素转换为实际画布像素
-  return (pointer.clientX - rect.left) * (canvas.width / rect.width);
+  const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+  return (clientX - rect.left) * (canvas.width / rect.width);
 }
 
-function pointerDownHandler(e) {
-  pointerDown = true;
-  updatePaddleByPointer(e);
-  // 阻止触摸事件的默认行为，防止页面滚动
-  if (e.type === 'touchstart') e.preventDefault();
-}
-
-function pointerUpHandler(e) {
-  pointerDown = false;
-  // 阻止触摸事件的默认行为
-  if (e.type === 'touchend') e.preventDefault();
-}
-
-function pointerMoveHandler(e) {
-  if (pointerDown) {
-    updatePaddleByPointer(e);
-    // 阻止触摸事件的默认行为
-    if (e.type === 'touchmove') e.preventDefault();
+function handlePointerStart(e) {
+  e.preventDefault();
+  isDragging = true;
+  touchStartX = getRelativeX(e);
+  paddleStartX = paddle.x;
+  if (e.touches) {
+    canvas.style.opacity = "0.95";
   }
 }
 
-function updatePaddleByPointer(e) {
-  const x = getPointerX(e);
-  paddle.x = x - paddle.w / 2; // 让手指/鼠标位于 paddle 中心
+function handlePointerMove(e) {
+  if (!isDragging) return;
+  e.preventDefault();
+  
+  const currentX = getRelativeX(e);
+  const diffX = currentX - touchStartX;
+  let newX = paddleStartX + diffX;
+  
   // 边界限制
-  if (paddle.x < 0) paddle.x = 0;
-  if (paddle.x + paddle.w > canvas.width) paddle.x = canvas.width - paddle.w;
+  if (newX < 0) {
+    newX = 0;
+  } else if (newX + paddle.w > canvas.width) {
+    newX = canvas.width - paddle.w;
+  }
+  
+  paddle.x = newX;
 }
 
-// 游戏更新循环
+function pointerUpHandler(e) {
+  isDragging = false;
+  
+  // 阻止触摸默认行为
+  if (e.type === "touchend") {
+    e.preventDefault();
+  }
+  
+  // 重置挡板速度
+  paddle.dx = 0;
+  
+  // 恢复视觉状态
+  canvas.style.opacity = "1";
+}
+
+// 事件监听设置
+function setupEventListeners() {
+  // 键盘事件
+  document.addEventListener("keydown", keyDown);
+  document.addEventListener("keyup", keyUp);
+  
+  // 规则按钮事件
+  rulesButton.addEventListener("click", () => rules.classList.add("show"));
+  closeButton.addEventListener("click", () => rules.classList.remove("show"));
+  
+  // 鼠标事件
+  canvas.addEventListener("mousedown", handlePointerStart);
+  canvas.addEventListener("mouseup", pointerUpHandler);
+  canvas.addEventListener("mousemove", handlePointerMove);
+  canvas.addEventListener("mouseleave", pointerUpHandler);
+  
+  // 触摸事件
+  canvas.addEventListener("touchstart", handlePointerStart, { passive: false });
+  canvas.addEventListener("touchend", pointerUpHandler, { passive: false });
+  canvas.addEventListener("touchmove", handlePointerMove, { passive: false });
+}
+
+// 游戏主循环
 function update() {
   movePaddle();
   moveBall();
@@ -321,23 +444,6 @@ function update() {
   requestAnimationFrame(update);
 }
 
-// 事件监听器
-document.addEventListener("keydown", keyDown);
-document.addEventListener("keyup", keyUp);
-rulesButton.addEventListener("click", () => rules.classList.add("show"));
-closeButton.addEventListener("click", () => rules.classList.remove("show"));
-
-// 鼠标事件
-canvas.addEventListener("mousedown", pointerDownHandler);
-canvas.addEventListener("mouseup", pointerUpHandler);
-canvas.addEventListener("mousemove", pointerMoveHandler);
-canvas.addEventListener("mouseleave", pointerUpHandler);
-
-// 触摸事件
-canvas.addEventListener("touchstart", pointerDownHandler, { passive: false });
-canvas.addEventListener("touchend", pointerUpHandler, { passive: false });
-canvas.addEventListener("touchmove", pointerMoveHandler, { passive: false });
-
-// 初始化
+// 启动游戏
 initCanvas();
 update();

@@ -18,9 +18,44 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         {
             title: "原神截图",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/ea597ab3db8a42d99a3d86473d83444d20250814.png",
+            category: "YS"
+        },
+        {
+            title: "原神截图",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/fb741bb2c0264331986ffa46c07365a620250814.png",
+            category: "YS"
+        },
+        {
+            title: "原神截图",
             url: "https://prod-alicdn-community.kurobbs.com/forum/c2908353508b484fbf8ffe6acc576e8920250814.png",
             category: "YS"
-        }
+        },
+        {
+            title: "原神截图",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/fb741bb2c0264331986ffa46c07365a620250814.png",
+            category: "YS"
+        },
+        {
+            title: "原神截图",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/86fcbf2528aa4556821840dd0f09570c20250814.png",
+            category: "YS"
+        },
+        {
+            title: "原神截图",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/901e5b8dc1d24439b17d3f2a8a9a038120250814.png",
+            category: "YS"
+        },
+        {
+            title: "原神截图",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/c7aa3d0a917248159ec30a21d4d9b28b20250814.png",
+            category: "YS"
+        },
+        {
+            title: "原神截图",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/8cf0bac5bf254234aabaf5cb5fceaf4220250814.png",
+            category: "YS"
+        },
     ];
     
     // DOM元素
