@@ -1,34 +1,34 @@
 document.addEventListener('DOMContentLoaded', function() {
-    // Gitee图床图片数据（替换为你的实际图片URL）
+    // Gitee图床图片
     const images = [
         {
             title: "原神截图",
-            url: "https://github.com/SHIKEAIXY/img/blob/main/YS/01.png?raw=true",
+            url: "https://gitee.com/SHIKEAIXY/img/raw/master/YS/01.png",
             category: "YS"
         },
         {
             title: "原神截图",
-            url: "https://github.com/SHIKEAIXY/img/blob/main/YS/02.png?raw=true",
+            url: "https://gitee.com/SHIKEAIXY/img/raw/master/YS/02.png",
             category: "YS"
         },
         {
             title: "原神截图",
-            url: "https://github.com/SHIKEAIXY/img/blob/main/YS/03.png?raw=true",
+            url: "https://gitee.com/SHIKEAIXY/img/raw/master/YS/03.png",
             category: "YS"
         },
         {
             title: "原神截图",
-            url: "https://github.com/SHIKEAIXY/img/blob/main/YS/04.png?raw=true",
+            url: "https://gitee.com/SHIKEAIXY/img/raw/master/YS/04.png",
             category: "YS"
         },
         {
             title: "风景照",
-            url: "https://github.com/SHIKEAIXY/img/blob/main/MJ/01.png?raw=true",
+            url: "https://gitee.com/SHIKEAIXY/img/raw/master/MJ/01.png",
             category: "MJ"
         },
         {
             title: "个人照片",
-            url: "https://github.com/SHIKEAIXY/img/blob/main/GR/01.png?raw=true",
+            url: "https://gitee.com/SHIKEAIXY/img/raw/master/GR/01.png",
             category: "GR"
         }
     ];
@@ -81,24 +81,6 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-    // 处理Gitee图片为jsDelivr加速链接
-    function getJsDelivrUrl(originalGiteeUrl) {
-        // 提取Gitee仓库信息和图片路径
-        const giteeUrlRegex = /https?:\/\/gitee\.com\/([^/]+)\/([^/]+)\/raw\/master\/(.*)/;
-        const matches = originalGiteeUrl.match(giteeUrlRegex);
-        
-        if (matches && matches.length >= 4) {
-            const username = matches[1];
-            const repo = matches[2];
-            const path = matches[3];
-            // 生成jsDelivr加速链接
-            return `https://cdn.jsdelivr.net/gh/${username}/${repo}@master/${path}`;
-        }
-        
-        // 如果不符合Gitee raw链接格式，返回原链接（可根据实际情况调整）
-        return originalGiteeUrl;
-    }
-    
     // 渲染画廊
     function renderGallery() {
         imageGallery.innerHTML = '';
@@ -120,14 +102,13 @@ document.addEventListener('DOMContentLoaded', function() {
         card.setAttribute('data-category', image.category);
         
         const categoryName = getCategoryName(image.category);
-        const jsDelivrUrl = getJsDelivrUrl(image.url); // 获取jsDelivr加速链接
         
         card.innerHTML = `
             <div class="image-preview">
                 <div class="loading-spinner"></div>
-                <img src="${jsDelivrUrl}" alt="${image.title}" 
+                <img src="${image.url}" alt="${image.title}" 
                      onload="this.parentElement.querySelector('.loading-spinner').style.display='none'"
-                     onerror="this.parentElement.innerHTML='<div class=\'image-error\'><i class=\'fas fa-exclamation-triangle\'></i><p>加载失败</p><a href=\'${jsDelivrUrl}\' target=\'_blank\'>点击直接查看</a></div>'">
+                     onerror="this.parentElement.innerHTML='<div class=\'image-error\'><i class=\'fas fa-exclamation-triangle\'></i><p>加载失败</p><a href=\'${image.url}\' target=\'_blank\'>点击直接查看</a></div>'">
             </div>
             <div class="image-info">
                 <h3 class="image-title">${image.title}</h3>
@@ -138,7 +119,7 @@ document.addEventListener('DOMContentLoaded', function() {
         
         // 点击查看大图
         card.addEventListener('click', function() {
-            openImageViewer({...image, url: jsDelivrUrl});
+            openImageViewer(image);
         });
         
         return card;
