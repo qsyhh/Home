@@ -2,6 +2,7 @@
 const sponsors = [
   { name: "七草", amount: 2.73, date: "2025-8-11" },
   { name: "不嘻嘻", amount: 1.00, date: "2025-8-12" },
+  { name: "花生米", amount: 2.00, date: "2025-8-15" },
 ];
 
 const IMAGE_API_URL = "https://t.alcy.cc/pc";
