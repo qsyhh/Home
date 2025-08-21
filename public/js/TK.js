@@ -2,58 +2,83 @@ document.addEventListener('DOMContentLoaded', function() {
     // 图床图片
     const images = [
         {
-            title: "原神截图",
-            url: "https://prod-alicdn-community.kurobbs.com/forum/10835dead33a41598657e711d77752e420250814.png",
+            title: "ys (1)",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/e0b75082bd62472badfb0b8cc98280a620250821.png",
             category: "YS"
         },
         {
-            title: "原神截图",
-            url: "https://prod-alicdn-community.kurobbs.com/forum/ba8d6c80fe36408ca026b69fd04a476b20250814.png",
+            title: "ys (10)",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/bb0625fd67fa48b6805382733b05298e20250821.png",
             category: "YS"
         },
         {
-            title: "原神截图",
-            url: "https://prod-alicdn-community.kurobbs.com/forum/056d32bc567b4569a377b23ffb3310d020250814.png",
+            title: "ys (11)",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/d8751278023f4cd4a4919a550bc655e820250821.png",
             category: "YS"
         },
         {
-            title: "原神截图",
-            url: "https://prod-alicdn-community.kurobbs.com/forum/ea597ab3db8a42d99a3d86473d83444d20250814.png",
+            title: "ys (12)",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/59daab91fa2e4c21b223404bb2948bec20250821.png",
             category: "YS"
         },
         {
-            title: "原神截图",
-            url: "https://prod-alicdn-community.kurobbs.com/forum/fb741bb2c0264331986ffa46c07365a620250814.png",
+            title: "ys (13)",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/f61af00ff9f842ce9b8c40bd21a444ca20250821.png",
             category: "YS"
         },
         {
-            title: "原神截图",
-            url: "https://prod-alicdn-community.kurobbs.com/forum/c2908353508b484fbf8ffe6acc576e8920250814.png",
+            title: "ys (14)",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/d8d3ae65507a4b0eb2f5b5877fdb426f20250821.png",
             category: "YS"
         },
         {
-            title: "原神截图",
-            url: "https://prod-alicdn-community.kurobbs.com/forum/fb741bb2c0264331986ffa46c07365a620250814.png",
+            title: "ys (15)",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/c3936996e47a49189f6df131becce9f620250821.png",
             category: "YS"
         },
         {
-            title: "原神截图",
-            url: "https://prod-alicdn-community.kurobbs.com/forum/86fcbf2528aa4556821840dd0f09570c20250814.png",
+            title: "ys (16)",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/68ebb5c8ff7b4334af75509e49ffc05020250821.png",
             category: "YS"
         },
         {
-            title: "原神截图",
-            url: "https://prod-alicdn-community.kurobbs.com/forum/901e5b8dc1d24439b17d3f2a8a9a038120250814.png",
+            title: "ys (2)",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/f84a6a85186347b3946a1792e353eb6720250821.png",
             category: "YS"
         },
         {
-            title: "原神截图",
-            url: "https://prod-alicdn-community.kurobbs.com/forum/c7aa3d0a917248159ec30a21d4d9b28b20250814.png",
+            title: "ys (3)",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/b644e1c2e2d547209ed4771acf48cb6920250821.png",
             category: "YS"
         },
         {
-            title: "原神截图",
-            url: "https://prod-alicdn-community.kurobbs.com/forum/8cf0bac5bf254234aabaf5cb5fceaf4220250814.png",
+            title: "ys (4)",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/4bebf94103b847fe98652249edf66f7d20250821.png",
+            category: "YS"
+        },
+        {
+            title: "ys (5)",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/1a4ae0e2d7ac4f7b8db985d0afbb813e20250821.png",
+            category: "YS"
+        },
+        {
+            title: "ys (6)",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/067fdaa074f24f2ba763c4bd0703e14320250821.png",
+            category: "YS"
+        },
+        {
+            title: "ys (7)",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/c616e23f70db4554b08899cc09148dbe20250821.png",
+            category: "YS"
+        },
+        {
+            title: "ys (8)",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/8c1fbfe0efbc4eeb8e48cd4240ad520920250821.png",
+            category: "YS"
+        },
+        {
+            title: "ys (9)",
+            url: "https://prod-alicdn-community.kurobbs.com/forum/7c24ca212461437c981c33941df54ee120250821.png",
             category: "YS"
         },
     ];
