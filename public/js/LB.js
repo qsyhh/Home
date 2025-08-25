@@ -1,23 +1,21 @@
-// 赞助者数据
-const sponsors = [
-  { name: "L", amount: 5.00, date: "2025-8-22" },
-  { name: "七草", amount: 2.73, date: "2025-8-11" },
-  { name: "不嘻嘻", amount: 1.00, date: "2025-8-12" },
-  { name: "花生米", amount: 2.00, date: "2025-8-15" },
-];
-
 const IMAGE_API_URL = "https://t.alcy.cc/pc";
 
 // DOM加载完成后执行
 document.addEventListener('DOMContentLoaded', function() {
+  // 确保数据已加载
+  if (!window.sponsorsData) {
+    console.error('赞助者数据未加载，请检查LB2.js是否正确引入');
+    return;
+  }
+  
   // 初始化图片背景
   initImageBackground();
   
-  // 渲染赞助者列表
-  renderSponsors(sponsors);
+  // 渲染赞助者列表（使用LB2.js中的数据）
+  renderSponsors(window.sponsorsData);
   
   // 更新统计数据
-  updateStats(sponsors);
+  updateStats(window.sponsorsData);
   
   // 设置当前年份
   document.getElementById('current-year').textContent = new Date().getFullYear();
@@ -108,27 +106,27 @@ function initFilterButtons() {
       this.classList.add('active');
       
       const filter = this.getAttribute('data-filter');
-      let filteredSponsors = [...sponsors];
+      let filteredSponsors = [...window.sponsorsData];
       
       // 根据筛选条件过滤
       switch(filter) {
         case 'month':
           const currentMonth = new Date().getMonth();
           const currentYear = new Date().getFullYear();
-          filteredSponsors = sponsors.filter(sponsor => {
+          filteredSponsors = window.sponsorsData.filter(sponsor => {
             const date = new Date(sponsor.date);
             return date.getMonth() === currentMonth && date.getFullYear() === currentYear;
           });
           break;
         case 'year':
           const year = new Date().getFullYear();
-          filteredSponsors = sponsors.filter(sponsor => {
+          filteredSponsors = window.sponsorsData.filter(sponsor => {
             const date = new Date(sponsor.date);
             return date.getFullYear() === year;
           });
           break;
         default:
-          filteredSponsors = [...sponsors];
+          filteredSponsors = [...window.sponsorsData];
       }
       
       // 重新渲染列表
