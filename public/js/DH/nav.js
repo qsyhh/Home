@@ -54,27 +54,61 @@ document.addEventListener('DOMContentLoaded', () => {
         navBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.tab === activeTabKey));
     }
 
-    // 渲染标签内容
+    // 渲染标签内容 - 核心优化：PE端改为2列布局
     function renderTabContent(tabKey) {
         contentArea.innerHTML = '';
+        // 动态添加卡片容器类名，适配不同屏幕
+        const cardContainer = document.createElement('div');
+        cardContainer.className = 'card-container';
+        
+        // 根据屏幕宽度设置PE端2列布局（500px以下为手机端）
+        if (window.innerWidth <= 500) {
+            cardContainer.style.gridTemplateColumns = 'repeat(2, 1fr)';
+            cardContainer.style.gap = '12px'; // 手机端缩小间距，更紧凑
+        }
+
+        contentArea.appendChild(cardContainer);
+
         switch (tabKey) {
-            case 'hj': typeof renderHJContent === 'function' && renderHJContent(); break;
-            case 'yy': typeof renderYYContent === 'function' && renderYYContent(); break;
-            case 'yx': typeof renderYXContent === 'function' && renderYXContent(); break;
-            case 'zy': typeof renderZYContent === 'function' && renderZYContent(); break;
-            case 'more': renderMoreContent(); break;
-            default: renderHJContent();
+            case 'hj': 
+                if (typeof renderHJContent === 'function') {
+                    renderHJContent(cardContainer); // 传入容器，让子函数往里面添加卡片
+                }
+                break;
+            case 'yy': 
+                if (typeof renderYYContent === 'function') {
+                    renderYYContent(cardContainer);
+                }
+                break;
+            case 'yx': 
+                if (typeof renderYXContent === 'function') {
+                    renderYXContent(cardContainer);
+                }
+                break;
+            case 'zy': 
+                if (typeof renderZYContent === 'function') {
+                    renderZYContent(cardContainer);
+                }
+                break;
+            case 'more': 
+                renderMoreContent(cardContainer);
+                break;
+            default: 
+                renderHJContent(cardContainer);
         }
     }
 
+    // 背景图加载 - 核心优化：减少背景模糊，提升清晰度
     function loadLocalBgFirstThenApi() {
         const setBg = (url, isLocal = false) => {
             document.body.style.backgroundImage = `url(${url})`;
+            // 优化背景显示：降低模糊度，提升不透明度，增强清晰度
+            document.body.style.backgroundBlendMode = 'overlay'; // 叠加模式，让背景更清晰
             // 本地图添加淡入效果，API图替换时添加平滑过渡
             if (isLocal) {
                 document.body.style.transition = 'none'; 
             } else {
-                document.body.style.transition = 'background-image 0.8s ease-in-out'; // API图替换平滑过渡
+                document.body.style.transition = 'background-image 0.8s ease-in-out';
             }
         };
 
@@ -102,18 +136,4 @@ document.addEventListener('DOMContentLoaded', () => {
                     });
             });
     }
-
-    // 更多模块
-    function renderMoreContent() {
-        contentArea.innerHTML = `
-            <div class="more-container">
-                <h3 style="text-align:center; color:#2c3e50; margin-bottom:30px; font-size:24px;">
-                    <i class="fa fa-star"></i> 更多功能开发中
-                </h3>
-                <div style="text-align:center; color:#7f8c8d; font-size:16px; line-height:1.8;">
-                    <p>• 咕咕咕...</p>
-                </div>
-            </div>
-        `;
-    }
-}) 
+});

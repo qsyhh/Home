@@ -1,10 +1,4 @@
 const yxConfig = {
-    LeagueOfLegends: {
-        name: "英雄联盟",
-        logo: "https://lol.qq.com/favicon.ico",
-        introduce: "全球顶级MOBA竞技游戏，5V5对战模式，丰富英雄池",
-        URL: "https://lol.qq.com/"
-    },
     Minecraft: {
         name: "我的世界",
         logo: "./images/minecraft.png",
@@ -16,18 +10,6 @@ const yxConfig = {
         logo: "https://pvp.qq.com/favicon.ico",
         introduce: "移动端MOBA游戏，15分钟一局快节奏对战",
         URL: "https://pvp.qq.com/"
-    },
-    StardewValley: {
-        name: "星露谷物语",
-        logo: "https://www.stardewvalley.net/favicon.ico",
-        introduce: "治愈系农场模拟游戏，种植作物、养殖动物、结交村民",
-        URL: "https://www.stardewvalley.net/"
-    },
-    CS2: {
-        name: "CS2",
-        logo: "https://store.steampowered.com/favicon.ico",
-        introduce: "经典射击竞技游戏续作，高清画质+精准弹道",
-        URL: "https://store.steampowered.com/app/730/CounterStrike_2/"
     },
     GenshinImpact: {
         name: "原神",
