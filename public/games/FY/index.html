@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>飞扬的坤坤</title>
+    <meta charset="utf-8" />
+    <!-- 优化视口设置，确保移动设备正确缩放 -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
+    <link rel="stylesheet" href="styles.css" />
+    <link href="https://fonts.googleapis.com/css?family=Pacifico" rel="stylesheet" />
+    <link rel="icon" href="../../images/icon/favicon.ico" />
+    <style>
+        /* 添加基础样式确保画布正确显示 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+            overflow: hidden; /* 防止页面滚动 */
+        }
+        
+        #myCanvas {
+            display: block;
+            max-width: 100%;
+            max-height: 100vh;
+            background: url('img/bg.png') center center no-repeat;
+            background-size: cover; /* 确保背景图覆盖整个画布 */
+            touch-action: manipulation; /* 优化触摸体验，防止双击缩放 */
+        }
+    </style>
+</head>
+<body>
+    <!-- 移除canvas内联样式中的高度设置，由CSS统一控制 -->
+    <canvas id="myCanvas" width="620" height="480"></canvas>
+    <!-- 脚本放在canvas外面，确保正确加载 -->
+    <script src="script.js"></script>
+</body>
+</html>

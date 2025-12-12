@@ -1,0 +1,46 @@
+{
+    "compilerOptions": {
+        "target": "ESNext",
+        "module": "ESNext",
+        "strict": true,
+        "jsx": "preserve",
+        "moduleResolution": "bundler",
+        "resolveJsonModule": true,
+        "allowJs": true,
+        "skipLibCheck": true,
+        "noImplicitAny": false,
+        "removeComments": false,
+        "esModuleInterop": true,
+        "preserveConstEnums": false,
+        "allowSyntheticDefaultImports": true,
+        "forceConsistentCasingInFileNames": true,
+        "sourceMap": false,
+        "paths": {
+            "@/*": [
+                "./src/*"
+            ]
+        },
+        "types": [
+            "vite/client",
+            "@vitejs/plugin-vue",
+            "unplugin-vue-components",
+            "element-plus/global"
+        ],
+        "noEmit": true
+    },
+    "include": [
+        "./src/**/*",
+        "./src/**/*.ts",
+        "./src/**/*.d.ts",
+        "./src/**/*.vue",
+        "./src/**/*.js",
+        "./src/typings/**/*.d.ts",
+        "*",
+        "postcss.config.ts",
+        "vite.config.ts",
+        "uno.config.ts"
+    ],
+    "exclude": [
+        "node_modules"
+    ]
+}

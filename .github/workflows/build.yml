@@ -1,0 +1,45 @@
+name: Build and Deploy Preview
+permissions:
+  contents: read
+on:
+  push:
+    branches:
+      - EFU
+      - dev
+jobs:
+  release:
+    name: Build Website
+    runs-on: windows-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v5
+      - name: Setup Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: "24.x"
+          cache: pnpm
+          cache-dependency-path: pnpm-lock.yaml
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10
+      - name: Configure environment
+        run: |
+          if (-not (Test-Path .env)) {
+            Copy-Item .env.example .env
+            Write-Host "Created .env from example"
+          } else {
+            Write-Host ".env already exists"
+          }
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Build Website
+        run: pnpm run build
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN || secrets.GITHUB_TOKEN }}
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v5
+        with:
+          name: Home
+          path: dist
+          retention-days: 3

@@ -1,0 +1,8 @@
+{
+  "dependencies": {
+    "form-data": "^4.0.4",
+    "formdata-node": "^6.0.3",
+    "image-size": "^2.0.2",
+    "node-fetch": "2"
+  }
+}

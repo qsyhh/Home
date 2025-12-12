@@ -1,0 +1,77 @@
+[
+  {
+    "icon": "Blog",
+    "name": "真寻Bot教程",
+    "link": "https://docs.qsyhh.xyz/"
+  },
+  {
+    "icon": "Cloud",
+    "name": "赞助我们",
+    "link": "https://xiaoyu.qsyhh.xyz/QT"
+  },
+  {
+    "icon": "Cloud",
+    "name": "赞助列表",
+    "link": "https://xiaoyu.qsyhh.xyz/LB"
+  },
+  {
+    "icon": "Cloud",
+    "name": "我的图库",
+    "link": "https://xiaoyu.qsyhh.xyz/TK"
+  },
+  {
+    "icon": "Cloud",
+    "name": "网址导航栏",
+    "link": "https://xiaoyu.qsyhh.xyz/DH"
+  },
+  {
+    "icon": "CompactDisc",
+    "name": "飞扬的坤坤 -游戏",
+    "link": "https://xiaoyu.qsyhh.xyz/games/FY/index"
+  },
+  {
+    "icon": "Compass",
+    "name": "消坤乐 -游戏",
+    "link": "https://xiaoyu.qsyhh.xyz/games/XXL/index"
+  },
+  {
+    "icon": "Book",
+    "name": "2048 -游戏",
+    "link": "https://xiaoyu.qsyhh.xyz/games/2048/index"
+  },
+  {
+    "icon": "Fire",
+    "name": "堆积木 -游戏",
+    "link": "https://xiaoyu.qsyhh.xyz/games/DJM/index"
+  },
+  {
+    "icon": "LaptopCode",
+    "name": "打砖块 -游戏",
+    "link": "https://xiaoyu.qsyhh.xyz/games/DZK/index"
+  },
+  {
+    "icon": "Fire",
+    "name": "扫雷 -游戏",
+    "link": "https://xiaoyu.qsyhh.xyz/games/SL/index"
+  },
+  {
+    "icon": "Fire",
+    "name": "俄罗斯方块 -游戏",
+    "link": "https://xiaoyu.qsyhh.xyz/games/FK/index"
+  },
+  {
+    "icon": "Fire",
+    "name": "五子棋 -游戏",
+    "link": "https://xiaoyu.qsyhh.xyz/games/WZQ/index"
+  },
+    {
+    "icon": "Fire",
+    "name": "数独 -游戏",
+    "link": "https://xiaoyu.qsyhh.xyz/games/SD/index"
+  },
+  {
+    "icon": "Fire",
+    "name": "迷宫 -游戏",
+    "link": "https://xiaoyu.qsyhh.xyz/games/MG/index"
+  }
+]

@@ -1,0 +1,224 @@
+/*
+作者: imsyy
+主页：https://www.imsyy.top/
+GitHub：https://github.com/imsyy/home
+版权所有，请勿删除
+*/
+
+@charset "utf-8";
+@use "@/style/light-theme.scss" as light-theme;
+@use "@/style/dark-theme.scss" as dark-theme;
+
+/*全局样式*/
+
+html,
+body {
+  width: 100%;
+  height: 100%;
+  // width: 100dvh;
+  // height: 100dvh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  font-family: "MiSans VF", sans-serif;
+  font-weight: 330;
+  font-size: 0.98rem;
+}
+
+*,
+a,
+p {
+  margin: 0;
+  padding: 0;
+  -webkit-user-select: none;
+  user-select: none;
+  text-decoration: none;
+  box-sizing: border-box;
+
+  &:hover {
+    transition: 0.3s;
+  }
+}
+
+// 链接悬停效果
+a:hover {
+  color: rgb(57, 159, 255);
+  text-decoration: underline;
+}
+
+// 字体文件
+@font-face {
+  font-family: "Pacifico-Regular";
+  font-display: swap;
+  src: url("/font/Pacifico-Regular.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: "UnidreamLED";
+  font-display: swap;
+  src: url("/font/UnidreamLED.ttf") format("truetype");
+}
+
+@font-face {
+  font-family: 'MiSans-Regular';
+  font-display: swap;
+  src: url('/font/MiSans-Regular.otf') format('opentype');
+}
+
+// 基础样式
+#app {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+}
+
+
+
+// 文字超出
+.text-truncate-ellipsis {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+// 弹窗样式
+.el-message {
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  border-radius: 25px !important;
+  border-color: transparent !important;
+
+  .el-message__badge {
+    display: none;
+  }
+  .el-message__content {
+    white-space: nowrap;
+  }
+}
+
+// 进度条样式
+.el-progress-bar {
+  .el-progress-bar__outer {
+    border-radius: 6px;
+    background-color: var(--el-progress-bar-in-color);
+    .el-progress-bar__inner {
+      background-color: var(--el-progress-bar-out-color);
+      border-radius: 6px;
+      text-align: center;
+      font-family: "UnidreamLED";
+      span {
+        color: var(--el-progress-bar-span-color);
+        font-size: 0.9rem;
+      }
+    }
+  }
+}
+
+// Tooltip 样式
+.el-popper.is-dark {
+  border: 1px solid transparent !important;
+}
+
+// 卡片样式
+.el-card {
+  border-radius: 8px !important;
+  border: 1px solid transparent !important;
+  background-color: transparent !important;
+  .el-card__header {
+    font-weight: bold;
+    padding: 16px 20px !important;
+    border-bottom: 1px solid transparent !important;
+  }
+  .el-card__body {
+    padding: 0 !important;
+  }
+}
+
+// Transition 动画
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease-in-out;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+// keyframes 动画
+@keyframes fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-blur-in {
+  from {
+    filter: blur(20px) brightness(0.3);
+    transform: scale(1.6);
+  }
+  to {
+    filter: blur(0) brightness(1);
+    transform: scale(1);
+  }
+}
+
+@keyframes fade-blur-main-in {
+  from {
+    transform: scale(1.2);
+  }
+  to {
+    transform: scale(1);
+  }
+}
+
+// 隐藏元素
+@media (min-width: 910px) and (max-width: 1200px) {
+  .sm-hidden {
+    display: none;
+  }
+}
+
+// 自定义鼠标
+#cursor {
+  position: fixed;
+  width: 18px;
+  height: 18px;
+  background: #fff;
+  border-radius: 25px;
+  opacity: 0.25;
+  z-index: 10086;
+  pointer-events: none;
+  transition: 0.2s ease-in-out;
+  transition-property: background, opacity, transform;
+
+  &.hidden {
+    opacity: 0;
+  }
+
+  &.active {
+    opacity: 0.5;
+    transform: scale(0.5);
+  }
+}
+
+// 滚动条样式
+::-webkit-scrollbar,
+scrollbar {
+  width: 6px;
+  height: 6px;
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb,
+scrollbar-thumb {
+  border-radius: 10px;
+  background-color: #eeeeee;
+}
+

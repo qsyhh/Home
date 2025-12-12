@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小雨的图库</title>
+    <link rel="shortcut icon" href="images/icon/favicon.ico">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link rel="stylesheet" href="css/TK.css">
+</head>
+<body>
+  <!-- 返回链接 -->
+  <div style="display: flex;position:absolute;top:15px;left:15px;z-index:999;">
+    <a href="index" style="text-decoration:none;color:white;background:rgba(0,0,0,.3);font-family:bbh;font-size:16px;padding:8px 16px;border-radius:6px;transition:all 0.3s ease;display:flex;align-items:center;gap:8px;">
+      <i class="fas fa-home"></i>
+      <span>返回主页</span>
+    </a>
+  </div>
+    <div class="background-overlay"></div>
+    <div class="container">
+        <header>
+            <h1>我的图库~</h1>
+            <p>记录生活中的美好瞬间 ✨</p>
+        </header>
+
+        <div class="category-filters">
+            <button class="filter-btn active" data-category="all">全部</button>
+            <button class="filter-btn" data-category="YS">原神截图</button>
+            <button class="filter-btn" data-category="MJ">美景</button>
+            <button class="filter-btn" data-category="GR">个人照片</button>
+            <button class="filter-btn" data-category="QT">其他</button>
+        </div>
+
+        <div id="imageGallery">
+        </div>
+
+        <div class="empty-state" id="emptyState">
+            <i class="fas fa-images"></i>
+            <h3>未找到图片喵</h3>
+        </div>
+    </div>
+
+    <div class="image-viewer" id="imageViewer">
+        <div class="viewer-content">
+            <button class="close-viewer" id="closeViewer">&times;</button>
+            <img src="" alt="图片预览" class="viewer-image" id="viewerImage">
+            <div class="viewer-caption" id="viewerCaption"></div>
+        </div>
+    </div>
+
+    <script src="js/TK2.js"></script>
+    <script src="js/TK.js"></script>
+</body>
+</html>

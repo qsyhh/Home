@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-theme="light">
+<head>
+    <title>数独</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="author" content="Huazie">
+    <meta name="keywords" content="shudu,数独">
+    <meta name="description" content="数独游戏">
+    <link rel="shortcut icon" href="../../images/icon/favicon.ico">
+    <link rel="stylesheet" href="../css/notification.css">
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+</head>
+<body>
+    <button id="back-button" class="control-button">
+        <i class="fas fa-arrow-left"></i>
+    </button>
+    <button id="theme-button" class="control-button">
+        <i class="fas fa-sun"></i>
+    </button>
+    <div class="container">
+        <div class="header-container">
+            <h1>数独</h1>
+            <div class="timer-wrapper">
+                <div class="timer-container">
+                    <div class="timer-label">当前计时</div>
+                    <div id="timer" class="timer">00:00</div>
+                </div>
+                <div class="timer-container">
+                    <div class="timer-label">最少计时</div>
+                    <div id="min-timer" class="timer">--:--</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 游戏控制区域 -->
+        <div class="game-controls">
+            <select id="difficulty" class="minimal-select">
+                <option value="easy">简单</option>
+                <option value="medium">中等</option>
+                <option value="hard">困难</option>
+                <option value="expert">专家</option>
+            </select>
+            <button id="newGame" class="minimal-button"><i class="fas fa-plus"></i> 新游戏</button>
+            <button id="saveGame" class="minimal-button"><i class="fas fa-save"></i> 保存</button>
+            <button id="loadGame" class="minimal-button"><i class="fas fa-folder-open"></i> 读取</button>
+        </div>
+
+        <!-- 数独棋盘 -->
+        <div id="shuduBoard" class="board"></div>
+
+        <!-- 数字选择器 -->
+        <div id="numberSelector" class="number-selector">
+            <div class="number-selector-grid">
+                <button class="number" data-number="1">1</button>
+                <button class="number" data-number="2">2</button>
+                <button class="number" data-number="3">3</button>
+                <button class="number" data-number="4">4</button>
+                <button class="number" data-number="5">5</button>
+                <button class="number" data-number="6">6</button>
+                <button class="number" data-number="7">7</button>
+                <button class="number" data-number="8">8</button>
+                <button class="number" data-number="9">9</button>
+            </div>
+            <button id="eraser" class="number-clear-btn">清除</button>
+        </div>
+    </div>
+
+    <!-- JavaScript 文件 -->
+    <script src="../js/notification.js"></script>
+    <script src="../js/common.js"></script>
+    <script src="js/shudu.js"></script>
+    <script src="js/storage.js"></script>
+    <script src="js/game.js"></script>
+</body>
+</html>

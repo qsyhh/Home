@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>消坤乐</title>
+
+    <link rel="icon" href="../../images/icon/favicon.ico">
+
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/css?family=Montserrat:300,400&display=swap" rel="stylesheet">
+    <script src="script.js" charset="utf-8"></script>
+  </head>
+  <body>
+    <!-- 模式选择界面 -->
+    <div id="modeSelection">
+      <h2>选择游戏模式</h2>
+      <button id="endlessMode">无尽模式</button>
+      <button id="timedMode">限时模式</button>
+    </div>
+    
+    <!-- 游戏容器 -->
+    <div class="game-container">
+      <!-- 计分板，包含计时器和切换模式按钮 -->
+      <div class="scoreBoard">
+        <h3>得分</h3>
+        <h1 id="score">0</h1>
+        <div id="timer"></div>
+        <button id="changeMode">切换模式</button>
+      </div>
+      
+      <!-- 游戏网格 -->
+      <div class="grid"></div>
+    </div>
+  </body>
+</html>

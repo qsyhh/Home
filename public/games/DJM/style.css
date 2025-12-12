@@ -1,0 +1,185 @@
+/* General Styling */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-image: url('img/bg.png');
+  background-size: cover;
+  background-position: center;
+  min-height: 100vh;
+  font-family: 'Montserrat', sans-serif;
+  color: #85796b;
+  padding: 20px;
+}
+
+/* 游戏容器 - 用于组织布局 */
+.game-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+/* 游戏网格 - 响应式设计 */
+.grid {
+  display: flex;
+  flex-wrap: wrap;
+  background-color: rgba(109, 127, 151, 0.5);
+  padding: 5px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.5) inset, 0 1px 0 #fff;
+  margin-top: 20px;
+  width: 100%;
+  max-width: 560px;
+  aspect-ratio: 1/1; /* 保持正方形比例 */
+}
+
+/* 网格单元格 - 响应式大小 */
+.grid div {
+  width: 12.5%;
+  height: 12.5%;
+  background-size: cover;
+  background-position: center;
+  border-radius: 5px;
+  transition: transform 0.2s ease;
+}
+
+/* 悬停效果 */
+.grid div:hover {
+  transform: scale(1.05);
+}
+
+/* 计分板样式 */
+.scoreBoard {
+  background-color: cyan;
+  border-radius: 20px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  text-align: center;
+  color: #85796b;
+  width: 100%;
+  max-width: 300px;
+  margin-top: 20px;
+}
+
+h3, h1 {
+  font-family: 'Montserrat', sans-serif;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+h1 {
+  margin-top: -10px;
+  font-size: 2.5rem;
+}
+
+/* 模式选择界面 */
+#modeSelection {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #f0f0f0;
+  font-family: 'Montserrat', sans-serif;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  z-index: 10;
+  padding: 20px;
+}
+
+#modeSelection h2 {
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 2rem;
+  text-align: center;
+}
+
+#modeSelection button {
+  margin: 10px;
+  padding: 15px 30px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  background-color: #87ceeb;
+  border: none;
+  border-radius: 5px;
+  color: white;
+  width: 80%;
+  max-width: 300px;
+}
+
+/* 计时器和切换模式按钮 */
+#timer {
+  font-size: 1.2rem;
+  margin-top: 10px;
+}
+
+#changeMode {
+  margin-top: 10px;
+  padding: 8px 16px;
+  background-color: #ff6347;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+/* 初始隐藏游戏元素 */
+.grid, .scoreBoard {
+  display: none;
+}
+
+/* 媒体查询 - 针对小屏幕设备优化 */
+@media (max-width: 768px) {
+  body {
+    padding: 10px;
+  }
+  
+  h1 {
+    font-size: 2rem;
+  }
+  
+  #modeSelection h2 {
+    font-size: 1.5rem;
+  }
+  
+  #modeSelection button {
+    padding: 12px 24px;
+    font-size: 1rem;
+  }
+  
+  .scoreBoard {
+    padding: 15px;
+  }
+}
+
+/* 针对非常小的屏幕（如手机横屏） */
+@media (max-width: 480px) {
+  .grid {
+    padding: 3px;
+  }
+  
+  .grid div {
+    border-radius: 3px;
+  }
+  
+  #timer {
+    font-size: 1rem;
+  }
+  
+  #changeMode {
+    padding: 6px 12px;
+    font-size: 0.9rem;
+  }
+}

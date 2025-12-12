@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网址导航栏</title>
+    <link rel="stylesheet" href="./css/style.css">
+    <link rel="shortcut icon" href="../images/icon/favicon.ico">
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="loading-mask" id="loadingMask">
+        <div class="loading-content">
+            <i class="fa fa-spinner fa-spin"></i>
+            <span>加载中...</span>
+        </div>
+    </div>
+
+        <div class="home-btn">
+            <a href="../../index.html" style="text-decoration:none;color:white;">返回主页</a>
+        </div>
+        
+        <h1 class="title">网址导航栏</h1>
+
+        <div class="nav-container">
+            <div class="nav-btn active" data-tab="hj">
+                <i class="fa fa-server"></i> 环境
+            </div>
+            <div class="nav-btn" data-tab="yy">
+                <i class="fa fa-th-large"></i> 应用
+            </div>
+            <div class="nav-btn" data-tab="yx">
+                <i class="fa fa-gamepad"></i> 游戏
+            </div>
+            <div class="nav-btn" data-tab="zy">
+                <i class="fa fa-book"></i> 资源
+            </div>
+            <div class="nav-btn" data-tab="more">
+                <i class="fa fa-ellipsis-h"></i> 更多
+            </div>
+        </div>
+
+        <div class="card-container" id="content-area"></div>
+    </div>
+
+    <script src="./js/config.js"></script>
+    <script src="./js/hj.js"></script>
+    <script src="./js/yy.js"></script>
+    <script src="./js/yx.js"></script>
+    <script src="./js/zy.js"></script>
+    <script src="./js/nav.js"></script>
+</body>
+</html>

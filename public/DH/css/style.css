@@ -1,0 +1,252 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "微软雅黑", "PingFang SC", sans-serif;
+}
+
+/* 加载遮罩 */
+.loading-mask {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    z-index: 9999;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition: opacity 0.2s ease;
+}
+.loading-content {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 18px;
+    color: #333;
+}
+.loading-content i {
+    font-size: 24px;
+    color: #2c3e50;
+}
+
+/* 背景图优化：避免闪白 + 平滑过渡 */
+body {
+    background-color: #f5f5f5;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    background-attachment: fixed;
+    position: relative;
+    min-height: 100vh;
+    padding-top: 20px;
+    /* 新增：背景图切换过渡效果 */
+    transition: background-image 0.8s ease-in-out;
+}
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(255, 255, 255, 0.9);
+    z-index: -1;
+}
+
+/* 容器 */
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 20px;
+}
+
+/* 返回主页按钮 */
+.home-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    height: 40px;
+    background: rgba(0,0,0,.3);
+    font-size: 16px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+.home-btn:hover {
+    background: rgba(0,0,0,.5);
+    transform: scale(1.05);
+}
+
+/* 标题 */
+.title {
+    text-align: center;
+    font-size: clamp(26px, 5vw, 36px);
+    margin-bottom: 35px;
+    color: #2c3e50;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.08);
+    font-weight: 700;
+}
+
+/* 导航栏 */
+.nav-container {
+    display: flex;
+    gap: clamp(10px, 2vw, 18px);
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+.nav-btn {
+    border: 2px solid #2c3e50;
+    padding: clamp(10px, 2vw, 14px) clamp(18px, 3vw, 25px);
+    font-size: clamp(16px, 2vw, 18px);
+    cursor: pointer;
+    background-color: #fff;
+    border-radius: 8px;
+    transition: all 0.3s ease;
+    box-shadow: 0 3px 6px rgba(0,0,0,0.08);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #2c3e50;
+    outline: none;
+}
+.nav-btn.active {
+    background-color: #2c3e50;
+    color: #fff;
+    box-shadow: 0 6px 12px rgba(0,0,0,0.15);
+    transform: translateY(-3px);
+}
+.nav-btn:hover:not(.active) {
+    background-color: #f8f9fa;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.12);
+    transform: translateY(-2px);
+}
+.nav-btn i {
+    font-size: 18px;
+}
+
+/* 卡片容器 */
+.card-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(clamp(260px, 22vw, 300px), 1fr));
+    gap: clamp(20px, 3vw, 25px);
+}
+
+/* 应用卡片 */
+.app-card {
+    border: 2px solid #e0e0e0;
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    transition: all 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+}
+.app-card::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 4px;
+    background: linear-gradient(90deg, #3498db, #9b59b6);
+    transition: height 0.3s ease;
+}
+.app-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 12px 20px rgba(0,0,0,0.1);
+    border-color: #3498db;
+}
+.app-card:hover::after {
+    height: 8px;
+}
+
+/* Logo容器 */
+.app-logo-container {
+    width: clamp(60px, 12vw, 70px);
+    height: clamp(60px, 12vw, 70px);
+    border: 1px solid #eee;
+    margin-bottom: 15px;
+    background-size: cover;
+    background-position: center;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.app-logo-container::before {
+    content: '\f1c5';
+    font-family: 'Font Awesome 6 Free';
+    font-weight: 900;
+    font-size: 24px;
+    color: #bdc3c7;
+    display: none;
+}
+.app-logo-container.no-logo::before {
+    display: block;
+}
+
+/* 卡片文字 */
+.app-name {
+    font-size: clamp(18px, 3vw, 22px);
+    font-weight: 700;
+    margin-bottom: 8px;
+    color: #2c3e50;
+}
+.app-desc {
+    font-size: clamp(13px, 1.8vw, 14px);
+    color: #7f8c8d;
+    line-height: 1.6;
+    flex: 1;
+    padding: 0 5px;
+}
+
+/* 访问按钮 */
+.visit-btn {
+    margin-top: 15px;
+    padding: 6px 20px;
+    background-color: #3498db;
+    color: #fff;
+    border: none;
+    border-radius: 20px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+.visit-btn:hover {
+    background-color: #2980b9;
+    transform: scale(1.05);
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .nav-container {
+        gap: 10px;
+    }
+    .card-container {
+        grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    }
+    .home-btn {
+        margin: 0 auto 25px;
+    }
+}
+@media (max-width: 480px) {
+    .card-container {
+        grid-template-columns: 1fr;
+    }
+    .nav-btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
