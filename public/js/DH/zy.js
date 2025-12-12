@@ -7,7 +7,7 @@ const zyConfig = {
     },
     BaiduNetDisk: {
         name: "百度网盘",
-        logo: "./images/baidudisk.png",
+        logo: "	https://nd-static.bdstatic.com/m-static/v20-main/home/img/icon-home-new.b4083345.png",
         introduce: "国内领先的云存储服务，支持大文件备份、分享、离线下载",
         URL: "https://pan.baidu.com/"
     },

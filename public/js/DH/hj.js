@@ -1,21 +1,21 @@
 const hjConfig = {
     NodeJS: {
         name: "NodeJS",
-        logo: "./images/nodejs.png",
+        logo: "https://nodejs.cn/favicon.ico",
         introduce: "基于JavaScript的后端运行环境，非阻塞I/O模型，适合构建高性能网络应用",
-        URL: "/download/"
+        URL: "https://nodejs.cn/download/"
     },
     Python: {
         name: "Python",
-        logo: "./images/python.png",
+        logo: "https://www.python.org/favicon.ico",
         introduce: "简洁优雅的解释型语言，丰富第三方库，适用于AI、爬虫、数据分析",
         URL: "https://www.python.org/"
     },
     Go: {
         name: "Go语言",
-        logo: "https://golang.org/lib/godoc/images/go-logo-blue.svg",
+        logo: "https://golang.google.cn/favicon.ico",
         introduce: "谷歌开发静态强类型语言，兼顾性能与开发效率，适合云原生、微服务",
-        URL: "https://golang.org/"
+        URL: "https://golang.google.cn/"
     },
     Java: {
         name: "Java",

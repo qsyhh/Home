@@ -7,7 +7,7 @@ const yyConfig = {
     },
     Chrome: {
         name: "Chrome",
-        logo: "./images/chrome.png",
+        logo: "https://www.google.com/favicon.ico",
         introduce: "谷歌推出的高速浏览器，支持扩展插件、同步功能",
         URL: "https://www.google.com/chrome/"
     },
@@ -31,7 +31,7 @@ const yyConfig = {
     },
     QQ: {
         name: "QQ",
-        logo: "https://qzonestyle.gtimg.cn/qzone/v8/img/Qzone.svg",
+        logo: "https://static.cdnlogo.com/logos/t/62/tencent-qq.svg",
         introduce: "经典社交软件，支持多人聊天、文件传输、QQ空间",
         URL: "https://im.qq.com/"
     }

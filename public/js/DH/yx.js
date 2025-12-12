@@ -1,7 +1,7 @@
 const yxConfig = {
     Minecraft: {
         name: "我的世界",
-        logo: "./images/minecraft.png",
+        logo: "https://mc.163.com/favicon.ico",
         introduce: "沙盒建造游戏，支持创意模式自由搭建、生存模式冒险",
         URL: "https://www.minecraft.net/"
     },
