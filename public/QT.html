@@ -4,11 +4,18 @@
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>赞助</title>
-  <link rel="stylesheet" type="text/css" href="./css/style.css"/>
+  <!-- 引入独立CSS -->
+  <link rel="stylesheet" type="text/css" href="./css/QT.css"/>
+  <!-- 引入html2canvas库（截图需要） -->
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 </head>
-<div style="display: flex;position:absolute;width: 60px;height: 23px;top:6px;left:5px;z-index:999;background:rgba(0,0,0,.2);font-family:bbh;font-size:12px;border-radius:5px;align-items: center;justify-content: center;"><a href="index" style="text-decoration:none;color:white;">返回主页</a></div>
+<!-- 返回主页按钮 -->
+<div style="display: flex;position:absolute;width: 60px;height: 23px;top:6px;left:5px;z-index:999;background:rgba(0,0,0,.2);font-family:bbh;font-size:12px;border-radius:5px;align-items: center;justify-content: center;">
+  <a href="index.html" style="text-decoration:none;color:white;">返回主页</a>
+</div>
 <body>
-  <div class="box1">
+  <!-- 截图目标区域（添加ID） -->
+  <div class="box1" id="captureTarget">
     <div class="box2">
       <div class="p bt">或许您可以赞助我们</div>
       <div class="box3">
@@ -24,52 +31,8 @@
       </div>
     </div>
   </div>
-  <script>
-    // 自适应缩放函数，保持原有UI比例
-    function adjustScale() {
-      const body = document.body;
-      const windowWidth = window.innerWidth;
-      const windowHeight = window.innerHeight;
-      
-      // 原始设计尺寸
-      const designWidth = 600;
-      const designHeight = 350;
-      
-      // 计算基于宽度和高度的缩放比例
-      const scaleX = windowWidth / designWidth;
-      const scaleY = windowHeight / designHeight;
-      
-      // 取最小的缩放比例，确保内容完全显示
-      const scale = Math.min(scaleX, scaleY);
-      
-      // 应用缩放
-      body.style.transform = `scale(${scale})`;
-    }
-    
-    // 初始调整
-    adjustScale();
-    
-    // 窗口大小改变时重新调整
-    window.addEventListener('resize', adjustScale);
 
-    // 原有的时间显示功能
-    function number(num) {
-      if (num.toString().length === 1) num = `0${num}`
-      return num
-    }
-    function updateTime() {
-      const timeDisplay = document.getElementById('timeDisplay');
-      const currentDate = new Date();
-      const year = number(currentDate.getFullYear());
-      const month = number(currentDate.getMonth() + 1);
-      const day = number(currentDate.getDate());
-      const hours = number(currentDate.getHours());
-      const minutes = number(currentDate.getMinutes());
-      const seconds = number(currentDate.getSeconds());
-      const currentTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-      timeDisplay.textContent = currentTime;
-    }
-    setInterval(updateTime, 1000)
-  </script>
+  <!-- 引入独立JS -->
+  <script src="./js/QT.js"></script>
 </body>
 </html>
