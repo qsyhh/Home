@@ -1,60 +1,44 @@
-/* 引入自定义字体 */
 @font-face {
   font-family: "bbh";
   src: url("../font/荆南波波黑.ttf");
 }
-
-/* 全局样式 */
 body {
   width: 600px;
   height: 350px;
   margin: 0;
   padding: 0;
-  transform-origin: 0 0; /* 缩放原点：左上角 */
+  transform-origin: 0 0;
+  /* 移除固定缩放，改为根据屏幕宽度计算缩放比例 */
 }
-
-/* 外层容器（背景图） */
 .box1 {
   padding: 30px;
   background-image: url("../images/icon/底图.png");
   background-size: cover;
 }
-
-/* 内层白色边框容器 */
 .box2 {
   width: 540px;
   height: 270px;
   border: 2px solid #fff;
   border-radius: 13px;
 }
-
-/* 通用文本样式 */
 .p {
   position: relative;
   left: 5px;
   font-family: "bbh";
 }
-
-/* 标题样式 */
 .bt {
   font-size: 32px;
   color: #a52a;
 }
-
-/* 内容容器（弹性布局） */
 .box3 {
   display: flex;
   width: 100%;
   height: 229px;
 }
-
-/* 二维码容器 */
 .box4 {
   position: relative;
   width: 50%;
 }
-
-/* 二维码背景（毛玻璃效果） */
 .bg {
   position: absolute;
   top: 3%;
@@ -65,35 +49,25 @@ body {
   backdrop-filter: blur(30px);
   border-radius: 10px;
 }
-
-/* 二维码图片 */
 img {
   width: 100%;
   z-index: 1;
   position: relative;
 }
-
-/* 右侧文本容器 */
 .right {
   position: relative;
   top: 15px;
 }
-
-/* 赞助说明文本 */
 .zc {
   position: relative;
   top: 10px;
   font-size: 20px;
 }
-
-/* 感谢文本 */
 .gx {
   position: relative;
   top: 38px;
   font-size: 24px;
 }
-
-/* 时间显示文本 */
 .sj {
   position: relative;
   top: 95px;
