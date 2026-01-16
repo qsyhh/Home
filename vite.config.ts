@@ -28,8 +28,8 @@ export default ({ mode }: { mode: string }): UserConfig => {
             VitePWA({
                 registerType: "autoUpdate",
                 // 酪灰的小批注：如果遇到了子页面自动跳转主页等问题，或不需要客户端浏览器缓存，可尝试取消注释这两行代码，而不需要完全移除 PWA ~
-                // selfDestroying: true,
-                // injectRegister: false,
+                selfDestroying: true,
+                injectRegister: false,
                 workbox: {
                     skipWaiting: true,
                     clientsClaim: true,

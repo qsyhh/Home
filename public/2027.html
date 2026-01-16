@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>希望2027的你...</title>
+    <link rel="shortcut icon" href="./images/icon/favicon.ico">
+    <style>
+        /* 原有样式保持不变 */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            height: 100vh;
+            background: #000;
+            overflow: hidden;
+            font-family: "微软雅黑", "PingFang SC", sans-serif;
+            cursor: default;
+        }
+        .start-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            padding: 24px 56px;
+            font-size: 2.4rem;
+            font-weight: bold;
+            color: #fff;
+            background: linear-gradient(45deg, #ff3d00, #ffeb3b, #00e5ff, #7c4dff, #ff3d00);
+            background-size: 500% 500%;
+            border: none;
+            border-radius: 60px;
+            cursor: pointer;
+            z-index: 100;
+            box-shadow: 0 0 50px rgba(255, 61, 0, 0.9), 0 0 90px rgba(0, 229, 255, 0.7), 0 0 140px rgba(124, 77, 255, 0.5), 0 0 20px rgba(255,235,59,0.8) inset;
+            animation: gradientShift 1.8s ease infinite, pulse 1s ease infinite, floatBtn 2.5s ease-in-out infinite, shine 3s ease infinite;
+            transition: all 0.4s cubic-bezier(0.77, 0, 0.175, 1);
+            text-shadow: 0 0 12px rgba(0,0,0,0.4), 0 0 20px rgba(255,255,255,0.3);
+            letter-spacing: 2px;
+            overflow: hidden;
+        }
+        .start-btn::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(transparent, rgba(255,255,255,0.2), transparent);
+            transform: rotate(30deg);
+            animation: scan 3s ease-in-out infinite;
+        }
+        .start-btn:hover {
+            transform: translate(-50%, -50%) scale(1.18);
+            box-shadow: 0 0 70px rgba(255, 61, 0, 1), 0 0 130px rgba(0, 229, 255, 0.9), 0 0 190px rgba(124, 77, 255, 0.7), 0 0 30px rgba(255,235,59,1) inset;
+            text-shadow: 0 0 15px rgba(0,0,0,0.5), 0 0 25px rgba(255,255,255,0.4);
+        }
+        .start-btn:active {
+            transform: translate(-50%, -50%) scale(1.1);
+            box-shadow: 0 0 40px rgba(255, 61, 0, 0.8), 0 0 80px rgba(0, 229, 255, 0.6), 0 0 120px rgba(124, 77, 255, 0.4), 0 0 25px rgba(255,235,59,0.9) inset;
+        }
+        .start-btn.hide {
+            animation: btnDisappear 1s forwards cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 50px rgba(255, 61, 0, 0.9), 0 0 90px rgba(0, 229, 255, 0.7), 0 0 140px rgba(124, 77, 255, 0.5), 0 0 20px rgba(255,235,59,0.8) inset; }
+            50% { box-shadow: 0 0 80px rgba(255, 61, 0, 1), 0 0 140px rgba(0, 229, 255, 0.9), 0 0 190px rgba(124, 77, 255, 0.7), 0 0 30px rgba(255,235,59,1) inset; }
+            100% { box-shadow: 0 0 50px rgba(255, 61, 0, 0.9), 0 0 90px rgba(0, 229, 255, 0.7), 0 0 140px rgba(124, 77, 255, 0.5), 0 0 20px rgba(255,235,59,0.8) inset; }
+        }
+        @keyframes floatBtn {
+            0% { transform: translate(-50%, -50%) translateY(0) rotate(0deg); }
+            25% { transform: translate(-50%, -50%) translateY(-12px) rotate(0.5deg); }
+            50% { transform: translate(-50%, -50%) translateY(0) rotate(0deg); }
+            75% { transform: translate(-50%, -50%) translateY(-12px) rotate(-0.5deg); }
+            100% { transform: translate(-50%, -50%) translateY(0) rotate(0deg); }
+        }
+        @keyframes btnDisappear {
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(1); box-shadow: 0 0 80px rgba(255, 61, 0, 1), 0 0 140px rgba(0, 229, 255, 0.9), 0 0 190px rgba(124, 77, 255, 0.7); }
+            30% { opacity: 0.8; transform: translate(-50%, -50%) scale(1.5); box-shadow: 0 0 120px rgba(255, 61, 0, 1), 0 0 200px rgba(0, 229, 255, 1), 0 0 280px rgba(124, 77, 255, 0.9); }
+            70% { opacity: 0.3; transform: translate(-50%, -50%) scale(2.5); box-shadow: 0 0 180px rgba(255, 61, 0, 0.8), 0 0 280px rgba(0, 229, 255, 0.8), 0 0 380px rgba(124, 77, 255, 0.6); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(4); pointer-events: none; box-shadow: 0 0 250px rgba(255, 61, 0, 0.5), 0 0 380px rgba(0, 229, 255, 0.5), 0 0 500px rgba(124, 77, 255, 0.3); }
+        }
+        @keyframes shine {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.92; }
+        }
+        @keyframes scan {
+            0% { transform: rotate(30deg) translateX(-100%); }
+            100% { transform: rotate(30deg) translateX(100%); }
+        }
+        .main-title {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0.5);
+            font-size: clamp(2.5rem, 8vw, 4rem);
+            color: #ffd700;
+            text-shadow: 0 0 20px #ffd700, 0 0 40px #ff9800, 0 0 60px #ff5722;
+            z-index: 20;
+            opacity: 0;
+            transition: all 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+        .main-title.show {
+            opacity: 1;
+            transform: translate(-50%, -50%) scale(1);
+            text-shadow: 0 0 30px #ffd700, 0 0 60px #ff9800, 0 0 90px #ff5722, 0 0 120px #ff3d00;
+        }
+        .start-glow {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(255,215,0,0.3) 0%, rgba(255,61,0,0.1) 50%, transparent 70%);
+            z-index: 15;
+            opacity: 0;
+            transition: all 1.5s cubic-bezier(0.19, 1, 0.22, 1);
+        }
+        .start-glow.show {
+            opacity: 1;
+            width: 200vw;
+            height: 200vw;
+        }
+        #blessings-container {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 10;
+            left: 0;
+            top: 0;
+        }
+        .blessing {
+            position: absolute;
+            color: hsl(var(--hue), 100%, 60%);
+            font-size: clamp(14px, 3vw, 22px);
+            text-shadow: 0 0 8px hsl(var(--hue), 100%, 50%);
+            opacity: 0;
+            transform: scale(0.8);
+            transition: all 1.2s ease;
+            animation: float 4s ease-in-out infinite;
+        }
+        @keyframes float {
+            0% { transform: translateY(0) scale(1); }
+            50% { transform: translateY(-5px) scale(1.05); }
+            100% { transform: translateY(0) scale(1); }
+        }
+        #fireworks {
+            position: fixed;
+            width: 100vw;
+            height: 100vh;
+            z-index: 5;
+            pointer-events: none;
+            left: 0;
+            top: 0;
+        }
+        /* 音乐控制样式 */
+        .music-controls {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 90;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            opacity: 0;
+            transition: opacity 1s ease;
+        }
+        .music-controls.show {
+            opacity: 1;
+        }
+        .music-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255,255,255,0.3);
+            color: #ffd700;
+            font-size: 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(255,215,0,0.3);
+            transition: all 0.3s ease;
+        }
+        .music-btn:hover {
+            background: rgba(255,215,0,0.2);
+            transform: scale(1.1);
+            box-shadow: 0 0 30px rgba(255,215,0,0.5);
+        }
+        .volume-slider {
+            width: 120px;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(255,255,255,0.2);
+            border-radius: 3px;
+            outline: none;
+        }
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            background: #ffd700;
+            cursor: pointer;
+            box-shadow: 0 0 10px rgba(255,215,0,0.8);
+            transition: all 0.2s ease;
+        }
+        .volume-slider::-webkit-slider-thumb:hover {
+            transform: scale(1.2);
+            box-shadow: 0 0 15px rgba(255,215,0,1);
+        }
+    </style>
+</head>
+<body>
+    <button class="start-btn" id="startBtn">开启2027祝福</button>
+    <div class="start-glow" id="startGlow"></div>
+    <h1 class="main-title" id="mainTitle">希望2027的你...</h1>
+    <div id="blessings-container"></div>
+    <canvas id="fireworks"></canvas>
+    
+    <!-- 音乐控制组件 -->
+    <div class="music-controls" id="musicControls">
+        <button class="music-btn" id="musicToggle">▶️</button>
+        <input type="range" min="0" max="1" step="0.01" value="0.7" class="volume-slider" id="volumeSlider">
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const startBtn = document.getElementById('startBtn');
+            const mainTitle = document.getElementById('mainTitle');
+            const startGlow = document.getElementById('startGlow');
+            const container = document.getElementById('blessings-container');
+            const canvas = document.getElementById('fireworks');
+            const ctx = canvas.getContext('2d');
+            const musicToggle = document.getElementById('musicToggle');
+            const volumeSlider = document.getElementById('volumeSlider');
+            const musicControls = document.getElementById('musicControls');
+            let containerW, containerH;
+            let fireworks = [];
+            let backgroundParticles = [];
+            let risingFireworks = [];
+            let isStarted = false;
+            // 已替换为你的在线音频链接
+            const serverBgmPath = "https://metingapi.nanorocky.top/?server=netease&type=url&id=443242";
+            let audio = null;
+            let isMusicPlaying = false;
+
+            function resizeCanvas() {
+                containerW = window.innerWidth;
+                containerH = window.innerHeight;
+                canvas.width = containerW;
+                canvas.height = containerH;
+            }
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            canvas.style.willChange = 'transform';
+
+            // 初始化音频（支持在线链接）
+            function initServerAudio() {
+                if (audio) return;
+                audio = new Audio(serverBgmPath);
+                audio.loop = true; // 循环播放
+                audio.volume = volumeSlider.value;
+                // 加载失败提示优化
+                audio.onerror = () => {
+                    alert("音频加载失败！可能是链接存在防盗链限制，建议下载音频到本地或更换无限制的在线链接。");
+                    musicToggle.disabled = true;
+                    volumeSlider.disabled = true;
+                };
+            }
+
+            // 播放/暂停音乐
+            function toggleMusic() {
+                if (!audio) initServerAudio();
+                if (!audio) return;
+
+                if (isMusicPlaying) {
+                    audio.pause();
+                    musicToggle.textContent = '▶️';
+                } else {
+                    // 解决浏览器自动播放限制（需用户点击页面后触发）
+                    audio.play().catch(err => {
+                        alert("浏览器阻止了自动播放，请点击页面任意位置后再尝试播放音乐～");
+                    });
+                    musicToggle.textContent = '⏸️';
+                }
+                isMusicPlaying = !isMusicPlaying;
+            }
+
+            // 音量控制
+            volumeSlider.addEventListener('input', () => {
+                if (audio) audio.volume = volumeSlider.value;
+            });
+
+            startBtn.addEventListener('click', () => {
+                if (isStarted) return;
+                isStarted = true;
+                
+                startBtn.classList.add('hide');
+                
+                setTimeout(() => {
+                    startGlow.classList.add('show');
+                }, 300);
+                
+                setTimeout(() => {
+                    mainTitle.classList.add('show');
+                }, 600);
+                
+                setTimeout(() => {
+                    startGlow.style.opacity = '0';
+                }, 1800);
+                
+                setTimeout(() => {
+                    createBlessings();
+                    // 显示音乐控制并初始化音频
+                    musicControls.classList.add('show');
+                    initServerAudio();
+                    // 尝试自动播放（需用户交互后生效）
+                    toggleMusic();
+                }, 800);
+                
+                initBackgroundParticles();
+                
+                setTimeout(() => {
+                    setInterval(() => {
+                        if (isStarted) {
+                            spawnRisingFirework();
+                        }
+                    }, 1500);
+                }, 2000);
+                
+                animate();
+            });
+
+            // 音乐控制按钮点击事件
+            musicToggle.addEventListener('click', toggleMusic);
+
+            function spawnRisingFirework() {
+                const startX = Math.random() * containerW * 0.8 + containerW * 0.1;
+                const startY = containerH;
+                const targetX = Math.random() * containerW * 0.6 + containerW * 0.2;
+                const targetY = Math.random() * containerH * 0.2 + containerH * 0.4;
+                
+                risingFireworks.push({
+                    x: startX,
+                    y: startY,
+                    targetX: targetX,
+                    targetY: targetY,
+                    hue: Math.random() * 360,
+                    speed: 5 + Math.random() * 2,
+                    isRising: true,
+                    trailParticles: []
+                });
+            }
+
+            document.addEventListener('contextmenu', (e) => e.preventDefault());
+            document.addEventListener('mousedown', (e) => {
+                if (!isStarted) return;
+                if (e.button === 0) {
+                    e.preventDefault();
+                    fireworks.push(new Firework(e.clientX, e.clientY));
+                } else if (e.button === 2) {
+                    e.preventDefault();
+                }
+            });
+
+            const blessings = [
+                "无欺","幸运","坦荡","喜乐","清醒自知","坦率","乐观","顺遂无忧","自在","欢喜",
+                "进取","暴富","蜕变","自足","有序","健康","作息规律","心无杂念","美满",
+                "吉祥","清醒自知","常欢喜","勇敢","通透","有盼头","自治","做自己","平和","福常伴",
+                "利相随","从容","有分寸","安稳度日","情自治","突破局限","沉稳清醒","从容不迫","坚强","明媚",
+                "内心丰盈","睡眠安稳","幸福","温柔坚定","生财有道","笑常伴","没有烦恼","松弛","理性","不惧风霜",
+                "内核稳定","有盼头","顺遂无忧","八方来财","无忧无忧","富贵有余","情安稳","踏实","开阔","生活有序",
+                "热烈","独立","相处无压","人际舒展","一帆风顺","保持热爱","平安","未来可期","无忧",
+                "团圆","生活有序","自信","财运旺","少遗憾","明辨是非","精进","情绪稳定","开心",
+                "如意","突破","自愈力强","富相随","人自在","自律","长久",
+                "得胜","福气","少遗憾","快乐","事顺遂","坚韧","好运",
+                "有序","精进","财气盛","顺遂","有底气","岁岁安康","安康","吉祥",
+                "温柔坚定","远见敏锐","坦率","蜕变","保持热爱",
+                "财运亨通","万事胜意","喜乐常伴","福禄绵长","平安喜乐",
+                "心想事成","前程似锦","福气满满","好运连连","健康长寿",
+                "阖家幸福","步步高升","笑口常开","龙马精神","顺水顺风",
+                "大展宏图","吉祥如意","无忧无虑","金玉满堂","紫气东来",
+                "福星高照","鸿运当头","吉祥安康","福禄双全","喜上眉梢",
+                "万事亨通","百业兴旺","五谷丰登","年年有余","岁岁平安",
+                "时来运转","功成名就","蒸蒸日上","鹏程万里","大展经纶",
+                "春风得意","事业有成","财源广进","金玉良缘","天作之合",
+                "平安顺遂","喜乐无忧","康宁福寿","德厚流光","吉庆有余",
+                "福慧双修","紫气东来","祥云瑞气","招财进宝","纳福迎祥",
+                "神采飞扬","意气风发","精神抖擞","容光焕发","活力满满",
+                "智慧通达","明察秋毫","豁达大度","宽以待人","和和美美",
+                "蒸蒸日上","欣欣向荣","安居乐业","丰衣足食","福寿绵长",
+                "吉人天相","万事如意","心想事成","富贵吉祥","平安喜乐",
+                "福禄寿喜","荣华富贵","一帆风顺","双喜临门","三阳开泰"
+            ];
+
+            function createBlessings() {
+                const gridCols = 15;
+                const gridRows = 10;
+                const colWidth = containerW / gridCols;
+                const rowHeight = containerH / gridRows;
+                let index = 0;
+
+                for (let row = 0; row < gridRows; row++) {
+                    for (let col = 0; col < gridCols; col++) {
+                        if (index >= blessings.length) break;
+                        const isCenterArea = (col > gridCols/3.5 && col < gridCols*2.5/3.5) && (row > gridRows/3.5 && row < gridRows*2.5/3.5);
+                        if (isCenterArea) continue;
+
+                        const x = col * colWidth + Math.random() * colWidth * 0.8 - 10;
+                        const y = row * rowHeight + Math.random() * rowHeight * 0.8 - 10;
+                        const div = document.createElement('div');
+                        div.className = 'blessing';
+                        div.textContent = blessings[index];
+                        div.style.setProperty('--hue', Math.floor(Math.random() * 360));
+                        div.style.left = `${x}px`;
+                        div.style.top = `${y}px`;
+                        div.style.animationDelay = `${Math.random() * 3}s`;
+                        container.appendChild(div);
+
+                        setTimeout(() => {
+                            div.style.opacity = '1';
+                            div.style.transform = 'scale(1)';
+                        }, index * 80);
+                        index++;
+                    }
+                }
+            }
+
+            class BackgroundParticle {
+                constructor() {
+                    this.x = Math.random() * containerW;
+                    this.y = Math.random() * containerH;
+                    this.size = Math.random() * 0.8 + 0.3;
+                    this.hue = Math.random() * 360;
+                    this.color = `hsl(${this.hue}, 100%, 70%)`;
+                    this.vx = (Math.random() - 0.5) * 0.2;
+                    this.vy = (Math.random() - 0.5) * 0.2;
+                    this.alpha = Math.random() * 0.4 + 0.1;
+                }
+                update() {
+                    this.x += this.vx;
+                    this.y += this.vy;
+                    if (this.x < 0 || this.x > containerW) this.vx *= -1;
+                    if (this.y < 0 || this.y > containerH) this.vy *= -1;
+                }
+                draw() {
+                    ctx.save();
+                    ctx.globalAlpha = this.alpha;
+                    ctx.fillStyle = this.color;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+                    ctx.fill();
+                    ctx.restore();
+                }
+            }
+
+            class Firework {
+                constructor(clickX = null, clickY = null) {
+                    this.x = clickX || Math.random() * containerW;
+                    this.y = clickY || Math.random() * containerH;
+                    this.hue = Math.random() * 360;
+                    this.particles = [];
+                    const particleCount = 120;
+                    for (let i = 0; i < particleCount; i++) {
+                        const angle = (i / particleCount) * Math.PI * 2;
+                        const speed = Math.random() * 3.6 + 1.2;
+                        this.particles.push({
+                            x: this.x,
+                            y: this.y,
+                            vx: Math.cos(angle) * speed,
+                            vy: Math.sin(angle) * speed,
+                            alpha: 1,
+                            decay: 0.003 + Math.random() * 0.002,
+                            size: Math.random() * 1.2 + 0.4,
+                            color: `hsl(${this.hue + Math.random() * 25}, 100%, ${55 + Math.random() * 20}%)`
+                        });
+                    }
+                }
+                update() {
+                    this.particles.forEach(p => {
+                        p.x += p.vx * 0.6;
+                        p.y += p.vy * 0.6;
+                        p.vy += 0.03;
+                        p.alpha -= p.decay;
+                    });
+                    this.particles = this.particles.filter(p => p.alpha > 0.1);
+                }
+                draw() {
+                    this.particles.forEach(p => {
+                        ctx.save();
+                        ctx.globalAlpha = p.alpha;
+                        ctx.fillStyle = p.color;
+                        ctx.beginPath();
+                        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+                        ctx.fill();
+                        ctx.restore();
+                    });
+                }
+            }
+
+            function initBackgroundParticles() {
+                for (let i = 0; i < 180; i++) {
+                    backgroundParticles.push(new BackgroundParticle());
+                }
+            }
+
+            function animate() {
+                ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+                ctx.fillRect(0, 0, containerW, containerH);
+
+                if (isStarted) {
+                    const batchSize = 30;
+                    for (let i = 0; i < backgroundParticles.length; i += batchSize) {
+                        const batch = backgroundParticles.slice(i, i + batchSize);
+                        batch.forEach(p => {
+                            p.update();
+                            p.draw();
+                        });
+                    }
+
+                    risingFireworks.forEach((rf, rfIndex) => {
+                        if (rf.isRising) {
+                            const dx = rf.targetX - rf.x;
+                            const dy = rf.targetY - rf.y;
+                            const distance = Math.sqrt(dx * dx + dy * dy);
+                            
+                            rf.trailParticles.push({
+                                x: rf.x,
+                                y: rf.y,
+                                size: 1 + Math.random() * 0.5,
+                                alpha: 0.8,
+                                decay: 0.02,
+                                color: `hsl(${rf.hue}, 100%, 70%)`
+                            });
+                            
+                            if (distance > rf.speed) {
+                                rf.x += (dx / distance) * rf.speed;
+                                rf.y += (dy / distance) * rf.speed;
+                            } else {
+                                rf.isRising = false;
+                                fireworks.push(new Firework(rf.targetX, rf.targetY));
+                            }
+                            
+                            ctx.save();
+                            ctx.fillStyle = `hsl(${rf.hue}, 100%, 70%)`;
+                            ctx.beginPath();
+                            ctx.arc(rf.x, rf.y, 2, 0, Math.PI * 2);
+                            ctx.fill();
+                            ctx.restore();
+                            
+                            rf.trailParticles.forEach((tp, tpIndex) => {
+                                tp.alpha -= tp.decay;
+                                if (tp.alpha <= 0) {
+                                    rf.trailParticles.splice(tpIndex, 1);
+                                    return;
+                                }
+                                ctx.save();
+                                ctx.globalAlpha = tp.alpha;
+                                ctx.fillStyle = tp.color;
+                                ctx.beginPath();
+                                ctx.arc(tp.x, tp.y, tp.size, 0, Math.PI * 2);
+                                ctx.fill();
+                                ctx.restore();
+                            });
+                        } else {
+                            risingFireworks.splice(rfIndex, 1);
+                        }
+                    });
+
+                    if (Math.random() < 0.01) {
+                        fireworks.push(new Firework());
+                    }
+                    fireworks.forEach((f, index) => {
+                        f.update();
+                        f.draw();
+                        if (f.particles.length === 0) {
+                            fireworks.splice(index, 1);
+                        }
+                    });
+                }
+
+                requestAnimationFrame(animate);
+            }
+        });
+    </script>
+</body>
+
+</html>
+
