@@ -5,4 +5,5 @@ window.sponsorsData = [
   { name: "不嘻嘻", amount: 1.00, date: "2025-8-12" },
   { name: "花生米", amount: 2.00, date: "2025-8-15" },
   { name: "Error: Cannot findid", amount: 5.00, date: "2026-1-7" },
+  { name: "霜寂i", amount: 28.88, date: "2026-2-4" },
 ];
