@@ -3,6 +3,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const contentArea = document.getElementById('content-area');
     const loadingMask = document.getElementById('loadingMask');
     let activeTabKey = 'hj';
+    // 存储已创建的图片URL，用于后续释放
+    let createdImageUrls = [];
 
     loadLocalBgFirstThenApi();
 
@@ -98,9 +100,41 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // 背景图加载 - 核心优化：减少背景模糊，提升清晰度
+    // 验证图片格式是否支持
+    function isImageFormatSupported(blob) {
+        // 常见图片MIME类型列表
+        const supportedMimeTypes = [
+            'image/jpeg', 
+            'image/png', 
+            'image/gif', 
+            'image/webp',
+            'image/jpg',
+            'image/svg+xml',
+            'image/bmp'
+        ];
+        return supportedMimeTypes.includes(blob.type);
+    }
+
+    // 释放已创建的Object URL，避免内存泄漏
+    function revokeCreatedUrls() {
+        createdImageUrls.forEach(url => {
+            try {
+                URL.revokeObjectURL(url);
+            } catch (e) {
+                console.warn('释放URL失败:', e);
+            }
+        });
+        createdImageUrls = [];
+    }
+
+    // 背景图加载 - 
     function loadLocalBgFirstThenApi() {
         const setBg = (url, isLocal = false) => {
+            // 释放之前的图片资源
+            if (!isLocal) {
+                revokeCreatedUrls();
+            }
+            
             document.body.style.backgroundImage = `url(${url})`;
             // 优化背景显示：降低模糊度，提升不透明度，增强清晰度
             document.body.style.backgroundBlendMode = 'overlay'; // 叠加模式，让背景更清晰
@@ -112,28 +146,43 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         };
 
+        // 优先设置本地背景图
         setBg(publicConfig.bgApi.fallback, true);
         console.log('优先显示本地背景图');
 
-        fetch(publicConfig.bgApi.url)
-            .then(res => res.ok ? res.blob() : Promise.reject())
-            .then(blob => {
-                const apiImgUrl = URL.createObjectURL(blob);
-                setBg(apiImgUrl); 
-                console.log('API图加载成功，已替换本地图');
-            })
-            .catch(() => {
-                // 首选API失败，尝试备用API
-                fetch(publicConfig.bgApi.backupUrl)
-                    .then(res => res.ok ? res.blob() : Promise.reject())
-                    .then(blob => {
-                        const backupImgUrl = URL.createObjectURL(blob);
-                        setBg(backupImgUrl); 
-                        console.log('备用API图加载成功，已替换本地图');
-                    })
-                    .catch(() => {
+        // 加载API图片的通用函数
+        const loadApiImage = (url) => {
+            return fetch(url)
+                .then(res => {
+                    if (!res.ok) throw new Error(`HTTP error! status: ${res.status}`);
+                    return res.blob();
+                })
+                .then(blob => {
+                    // 验证图片格式
+                    if (!isImageFormatSupported(blob)) {
+                        throw new Error(`不支持的图片格式: ${blob.type}`);
+                    }
+                    // 创建Object URL并存储
+                    const apiImgUrl = URL.createObjectURL(blob);
+                    createdImageUrls.push(apiImgUrl);
+                    setBg(apiImgUrl);
+                    console.log(`API图加载成功(${blob.type})，已替换本地图`);
+                });
+        };
+
+        // 加载主API图片
+        loadApiImage(publicConfig.bgApi.url)
+            .catch(error => {
+                console.warn('主API图加载失败:', error);
+                // 尝试备用API
+                return loadApiImage(publicConfig.bgApi.backupUrl)
+                    .catch(backupError => {
+                        console.warn('备用API图加载失败:', backupError);
                         console.log('API图加载失败，保持本地背景图');
                     });
             });
+
+        // 页面卸载时释放资源
+        window.addEventListener('beforeunload', revokeCreatedUrls);
     }
 });

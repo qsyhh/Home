@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>小雨音乐 - 在线播放与下载</title>
+    <link rel="shortcut icon" href="images/icon/favicon.ico">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#6366f1',
+                        secondary: '#8b5cf6',
+                        dark: '#0f172a',
+                        light: '#f8fafc',
+                        amber: {
+                            200: '#fef3c7',
+                            400: '#fbbf24'
+                        }
+                    },
+                    fontFamily: {
+                        inter: ['Inter', 'system-ui', 'sans-serif'],
+                    },
+                    boxShadow: {
+                        'music': '0 4px 20px rgba(99, 102, 241, 0.15)',
+                        'music-hover': '0 8px 30px rgba(99, 102, 241, 0.25)',
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto { content-visibility: auto; }
+            .backdrop-blur-sm { backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px); }
+            .text-shadow { text-shadow: 0 2px 8px rgba(0,0,0,0.2); }
+            .scrollbar-hide::-webkit-scrollbar { display: none; }
+            .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+            .music-card { transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1); }
+            .music-card:hover { transform: translateY(-6px); box-shadow: var(--tw-shadow-music-hover); }
+            .btn-hover { transition: all 0.3s ease; }
+            .btn-hover:hover { transform: scale(1.08); }
+            .lyric-active { color: #6366f1 !important; font-weight: 600 !important; transform: scale(1.05); transition: all 0.3s ease; }
+            .toast-notification { transition: all 0.3s ease; }
+            /* 优化进度条样式 */
+            .progress-container {
+                height: 6px !important;
+                min-height: 6px !important;
+            }
+            .progress-bar {
+                height: 100% !important;
+            }
+            .progress-handle {
+                width: 14px !important;
+                height: 14px !important;
+                opacity: 1 !important;
+                transition: all 0.2s ease !important;
+            }
+            .progress-container:hover .progress-handle {
+                transform: translate(-50%, -50%) scale(1.2) !important;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-dark to-slate-900 text-light min-h-screen font-inter antialiased">
+    <header class="fixed top-0 left-0 right-0 z-50 bg-dark/90 backdrop-blur-sm border-b border-slate-800">
+        <div class="container mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-2">
+                <i class="fa fa-music text-primary text-2xl"></i>
+                <h1 class="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">小雨音乐</h1>
+            </div>
+            
+            <div class="flex-1 max-w-xl mx-3 md:mx-4 relative">
+                <input type="text" id="search-input" placeholder="搜索歌曲、歌手..." 
+                       class="w-full bg-slate-800/90 border border-slate-700 rounded-full py-2 px-4 pl-10 pr-16 focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all text-sm md:text-base">
+                <i class="fa fa-search absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
+                <!-- 修复手机端搜索按钮样式 -->
+                <button id="mobile-search-btn" class="absolute right-10 top-1/2 -translate-y-1/2 bg-primary text-white p-1.5 rounded-full md:hidden w-8 h-8 flex items-center justify-center">
+                    <i class="fa fa-search text-sm"></i>
+                </button>
+                <select id="music-server" class="absolute right-2 top-1/2 -translate-y-1/2 bg-slate-800 border border-slate-700 rounded-full py-1 px-2 text-xs md:text-sm text-slate-300 focus:outline-none focus:ring-1 focus:ring-primary h-8">
+                    <option value="netease">网易云</option>
+                    <option value="tencent">QQ音乐</option>
+                </select>
+            </div>
+            
+            <button id="theme-toggle" class="p-2 md:p-3 rounded-full hover:bg-slate-800 transition-colors btn-hover">
+                <i class="fa fa-moon-o text-slate-300"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="container mx-auto px-4 pt-20 md:pt-24 pb-32">
+        <div id="search-results" class="mt-6 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+            <div id="initial-state" class="col-span-full flex flex-col items-center justify-center py-24">
+                <div class="w-32 h-32 mb-6 bg-gradient-to-br from-primary/20 to-secondary/20 rounded-full flex items-center justify-center">
+                    <i class="fa fa-music text-6xl text-primary/80"></i>
+                </div>
+                <h3 class="text-2xl font-bold text-slate-200 mb-2">小雨音乐</h3>
+                <p class="text-slate-400 text-center max-w-md">输入关键词搜索你喜欢的音乐，支持网易云/QQ音乐双平台，在线播放与下载</p>
+                <p class="mt-4 text-sm text-slate-500">基于 <a href="https://github.com/NanoRocky" class="text-primary hover:underline" target="_blank">NanoRocky</a> 的 <a href="https://metingapi.nanorocky.top" class="text-primary hover:underline" target="_blank">Meting-Api 接口</a> 实现</p>
+                <p>仅用于内部学习交流,请勿商用</p>
+            </div>
+            
+            <div id="loading-indicator" class="col-span-full hidden flex-col items-center justify-center py-20">
+                <div class="animate-spin rounded-full h-14 w-14 border-t-3 border-b-3 border-primary mb-4"></div>
+                <p class="text-slate-400">正在搜索音乐...</p>
+            </div>
+            
+            <div id="empty-state" class="hidden col-span-full flex flex-col items-center justify-center py-20">
+                <div class="w-24 h-24 mb-4 bg-slate-800/50 rounded-full flex items-center justify-center">
+                    <i class="fa fa-headphones text-5xl text-slate-600"></i>
+                </div>
+                <h3 class="text-xl font-medium text-slate-300 mb-2">暂无搜索结果</h3>
+                <p class="text-slate-500">尝试更换关键词或音乐平台试试</p>
+            </div>
+        </div>
+    </main>
+
+    <footer class="fixed bottom-0 left-0 right-0 bg-dark/95 backdrop-blur-sm border-t border-slate-800 py-2 px-3 md:py-3 md:px-4">
+        <div class="container mx-auto flex flex-col md:flex-row items-center gap-3 md:gap-4">
+            <div class="flex items-center gap-2 flex-1 min-w-0">
+                <div id="now-playing-cover" class="w-12 h-12 md:w-14 md:h-14 rounded-md overflow-hidden shadow-music">
+                    <img src="https://picsum.photos/200/200?music" alt="封面" class="w-full h-full object-cover">
+                </div>
+                <div class="min-w-0">
+                    <h3 id="now-playing-title" class="font-medium truncate text-sm md:text-base">未播放音乐</h3>
+                    <p id="now-playing-artist" class="text-xs md:text-sm text-slate-400 truncate">点击歌曲开始播放</p>
+                </div>
+            </div>
+            
+            <div class="flex flex-col items-center gap-2 flex-2 w-full md:w-auto">
+                <div class="w-full flex items-center gap-2">
+                    <span id="current-time" class="text-xs text-slate-400 w-8 text-right">00:00</span>
+                    <!-- 优化进度条容器 -->
+                    <div class="h-1 bg-slate-700 rounded-full flex-1 relative group cursor-pointer progress-container">
+                        <div id="progress-bar" class="h-full bg-gradient-to-r from-primary to-secondary rounded-full w-0 relative progress-bar">
+                            <div class="absolute right-0 top-1/2 -translate-y-1/2 w-3 h-3 bg-white rounded-full shadow-md opacity-100 progress-handle"></div>
+                        </div>
+                    </div>
+                    <span id="total-time" class="text-xs text-slate-400 w-8">00:00</span>
+                </div>
+                
+                <div class="flex items-center gap-5 md:gap-6">
+                    <button class="text-slate-300 hover:text-primary transition-colors btn-hover" id="prev-btn">
+                        <i class="fa fa-step-backward text-base md:text-lg"></i>
+                    </button>
+                    <button class="text-slate-300 hover:text-primary transition-colors btn-hover bg-primary/10 rounded-full w-10 h-10 flex items-center justify-center" id="play-pause-btn">
+                        <i class="fa fa-play text-lg md:text-xl" id="play-pause-icon"></i>
+                    </button>
+                    <button class="text-slate-300 hover:text-primary transition-colors btn-hover" id="next-btn">
+                        <i class="fa fa-step-forward text-base md:text-lg"></i>
+                    </button>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-3 md:gap-4 flex-1 justify-end">
+                <button id="lyrics-toggle" class="text-slate-300 hover:text-primary transition-colors btn-hover p-1 md:p-2">
+                    <i class="fa fa-comment-o text-base md:text-lg"></i>
+                </button>
+                <button id="volume-btn" class="text-slate-300 hover:text-primary transition-colors btn-hover p-1 md:p-2">
+                    <i class="fa fa-volume-up text-base md:text-lg" id="volume-icon"></i>
+                </button>
+                <input type="range" id="volume-slider" min="0" max="100" value="80" class="w-16 md:w-20 accent-primary hidden md:block">
+            </div>
+        </div>
+    </footer>
+
+    <div id="lyrics-modal" class="fixed inset-0 bg-dark/98 z-50 hidden flex items-center justify-center p-4">
+        <div class="w-full max-w-md md:max-w-2xl h-[80vh] md:h-[70vh] bg-slate-900/95 rounded-xl overflow-hidden flex flex-col border border-slate-800 shadow-xl">
+            <div class="p-4 border-b border-slate-800 flex justify-between items-center bg-slate-800/50">
+                <h3 class="font-medium text-lg">歌词</h3>
+                <button id="close-lyrics" class="text-slate-400 hover:text-white btn-hover p-2 rounded-full hover:bg-slate-700/50">
+                    <i class="fa fa-times"></i>
+                </button>
+            </div>
+            <div id="lyrics-content" class="flex-1 overflow-y-auto p-4 md:p-6 text-center text-base md:text-lg leading-relaxed scrollbar-hide pt-8 pb-8">
+                <p class="text-slate-500 flex items-center justify-center gap-2">
+                    <i class="fa fa-music"></i>
+                    暂无歌词
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <audio id="audio-player" preload="metadata"></audio>
+
+    <script>
+        const API_BASE_URL = 'https://metingapi.nanorocky.top/';
+        let currentMusicList = [];
+        let currentMusicIndex = -1;
+        let isPlaying = false;
+        let isMuted = false;
+        let audioPlayer = document.getElementById('audio-player');
+        let lyricsVisible = false;
+        let lyricLines = [];
+        let lyricTimeTags = [];
+        
+        // DOM元素
+        const searchInput = document.getElementById('search-input');
+        const musicServer = document.getElementById('music-server');
+        const searchResults = document.getElementById('search-results');
+        const loadingIndicator = document.getElementById('loading-indicator');
+        const emptyState = document.getElementById('empty-state');
+        const initialState = document.getElementById('initial-state');
+        const playPauseIcon = document.getElementById('play-pause-icon');
+        const playPauseBtn = document.getElementById('play-pause-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const nowPlayingCover = document.getElementById('now-playing-cover').querySelector('img');
+        const nowPlayingTitle = document.getElementById('now-playing-title');
+        const nowPlayingArtist = document.getElementById('now-playing-artist');
+        const progressBar = document.getElementById('progress-bar');
+        const currentTimeEl = document.getElementById('current-time');
+        const totalTimeEl = document.getElementById('total-time');
+        const volumeBtn = document.getElementById('volume-btn');
+        const volumeIcon = document.getElementById('volume-icon');
+        const volumeSlider = document.getElementById('volume-slider');
+        const lyricsToggle = document.getElementById('lyrics-toggle');
+        const lyricsModal = document.getElementById('lyrics-modal');
+        const closeLyrics = document.getElementById('close-lyrics');
+        const lyricsContent = document.getElementById('lyrics-content');
+        const progressContainer = progressBar.parentElement;
+        const mobileSearchBtn = document.getElementById('mobile-search-btn');
+        const themeToggle = document.getElementById('theme-toggle');
+
+        // 初始化
+        document.addEventListener('DOMContentLoaded', () => {
+            loadingIndicator.classList.add('hidden');
+            emptyState.classList.add('hidden');
+            
+            searchInput.addEventListener('keypress', (e) => e.key === 'Enter' && searchInput.value.trim() && searchMusic(searchInput.value.trim()));
+            mobileSearchBtn.addEventListener('click', () => searchInput.value.trim() && searchMusic(searchInput.value.trim()));
+            searchInput.addEventListener('blur', () => { document.activeElement.blur(); });
+            
+            playPauseBtn.addEventListener('click', togglePlayPause);
+            prevBtn.addEventListener('click', playPrevious);
+            nextBtn.addEventListener('click', playNext);
+            audioPlayer.addEventListener('timeupdate', updateProgress);
+            audioPlayer.addEventListener('loadedmetadata', updateTotalTime);
+            audioPlayer.addEventListener('ended', playNext);
+            audioPlayer.addEventListener('error', handleAudioError);
+            progressContainer.addEventListener('click', seekAudio);
+            volumeSlider.addEventListener('input', adjustVolume);
+            volumeBtn.addEventListener('click', toggleMute);
+            lyricsToggle.addEventListener('click', toggleLyrics);
+            closeLyrics.addEventListener('click', toggleLyrics);
+            themeToggle.addEventListener('click', toggleTheme);
+            
+            audioPlayer.volume = volumeSlider.value / 100;
+            document.addEventListener('touchstart', () => {}, { passive: true });
+        });
+
+        // 音频错误处理
+        function handleAudioError(e) {
+            console.error('音频播放错误:', e);
+            showToast('播放失败，尝试切换其他歌曲或直接下载');
+            playNext();
+        }
+
+        // 搜索音乐
+        async function searchMusic(keyword) {
+            initialState.classList.add('hidden');
+            emptyState.classList.add('hidden');
+            loadingIndicator.classList.remove('hidden');
+            searchResults.innerHTML = '';
+            
+            try {
+                const url = `${API_BASE_URL}?server=${musicServer.value}&type=search&id=0&dwrc=true&keyword=${encodeURIComponent(keyword)}`;
+                const controller = new AbortController();
+                const timeoutId = setTimeout(() => controller.abort(), 10000);
+                
+                const response = await fetch(url, { signal: controller.signal, headers: { 'Accept': 'application/json' } });
+                clearTimeout(timeoutId);
+                
+                if (!response.ok) throw new Error(`HTTP错误: ${response.status}`);
+                const musicList = await response.json();
+                currentMusicList = Array.isArray(musicList) ? musicList : [];
+                loadingIndicator.classList.add('hidden');
+                
+                if (currentMusicList.length === 0) {
+                    emptyState.classList.remove('hidden');
+                    return;
+                }
+                renderMusicList(currentMusicList);
+            } catch (error) {
+                console.error('搜索音乐失败:', error);
+                loadingIndicator.classList.add('hidden');
+                emptyState.classList.remove('hidden');
+                emptyState.querySelector('p').textContent = `搜索失败: ${error.message || '请稍后重试'}`;
+            }
+        }
+
+        // 渲染音乐列表
+        function renderMusicList(musicList) {
+            musicList.forEach((music, index) => {
+                const duration = formatTime(music.duration || 0);
+                const musicCard = document.createElement('div');
+                musicCard.className = 'bg-slate-800/70 rounded-xl overflow-hidden shadow-music music-card border border-slate-700/50';
+                // 修复图片压缩问题 - 使用高质量图片链接
+                const coverUrl = music.pic ? music.pic.replace(/\?param=\d+x\d+/, '?param=800x800') : 'https://picsum.photos/800/800?music';
+                
+                musicCard.innerHTML = `
+                    <div class="relative">
+                        <img src="${coverUrl}" alt="${music.name}" class="w-full h-48 md:h-56 object-cover" loading="lazy">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent flex items-end p-4">
+                            <div class="w-full">
+                                <h3 class="font-medium text-shadow truncate text-white text-lg">${music.name || '未知歌曲'}</h3>
+                                <p class="text-sm text-slate-200 truncate mt-1">${music.artist || '未知歌手'}</p>
+                                <div class="flex justify-between items-center mt-3">
+                                    <span class="text-xs text-slate-300 bg-black/30 px-2 py-1 rounded-full">${duration}</span>
+                                    <div class="flex gap-2">
+                                        <button class="play-btn p-2.5 bg-primary/90 rounded-full hover:bg-primary transition-colors btn-hover" data-index="${index}">
+                                            <i class="fa fa-play text-sm text-white"></i>
+                                        </button>
+                                        <button class="download-btn p-2.5 bg-slate-700/90 rounded-full hover:bg-slate-600 transition-colors btn-hover" data-index="${index}">
+                                            <i class="fa fa-download text-sm text-white"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                searchResults.appendChild(musicCard);
+                musicCard.querySelector('.play-btn').addEventListener('click', () => playMusic(index));
+                musicCard.querySelector('.download-btn').addEventListener('click', () => openDownloadPage(musicList[index]));
+            });
+        }
+
+        // 获取真实音频URL（解析中转链接）
+        async function getRealAudioUrl(redirectUrl) {
+            try {
+                // 发送HEAD请求获取真实重定向地址
+                const response = await fetch(redirectUrl, {
+                    method: 'HEAD',
+                    redirect: 'follow',
+                    headers: {
+                        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+                    }
+                });
+                
+                // 返回最终的真实URL
+                return response.url || redirectUrl;
+            } catch (error) {
+                console.error('解析真实URL失败:', error);
+                // 失败时尝试直接使用原URL
+                return redirectUrl;
+            }
+        }
+
+        // Fetch中转下载（解决跨域/防盗链问题）
+        async function fetchAndDownload(url, fileName) {
+            showToast('使用备用下载方式...');
+            
+            const response = await fetch(url, {
+                headers: {
+                    'Referer': 'https://music.163.com/',
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36'
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP错误: ${response.status}`);
+            }
+
+            // 将响应转为Blob
+            const blob = await response.blob();
+            const blobUrl = URL.createObjectURL(blob);
+
+            // 创建下载链接
+            const link = document.createElement('a');
+            link.href = blobUrl;
+            link.download = fileName;
+            document.body.appendChild(link);
+            link.click();
+            
+            // 清理资源
+            setTimeout(() => {
+                URL.revokeObjectURL(blobUrl);
+                document.body.removeChild(link);
+            }, 1000);
+            
+            showToast('下载成功');
+        }
+
+        // 下载音乐
+        async function openDownloadPage(music) {
+            // 1. 基础验证
+            if (!music.url) {
+                showToast('该歌曲暂无下载链接');
+                return;
+            }
+
+            try {
+                showToast('正在解析下载链接...');
+                
+                // 2. 先获取真实的音频URL（二次请求解析中转链接）
+                const realAudioUrl = await getRealAudioUrl(music.url);
+                if (!realAudioUrl) {
+                    showToast('解析下载链接失败');
+                    return;
+                }
+
+                // 3. 处理文件名（过滤特殊字符）
+                const safeName = (music.name || '未知歌曲').replace(/[\\/:*?"<>|]/g, '_');
+                const safeArtist = (music.artist || '未知歌手').replace(/[\\/:*?"<>|]/g, '_');
+                const fileName = `${safeName} - ${safeArtist}.mp3`;
+
+                // 4. 方案1：直接下载（优先尝试）
+                const link = document.createElement('a');
+                link.href = realAudioUrl;
+                link.download = fileName;
+                link.target = '_blank';
+                document.body.appendChild(link);
+                
+                // 模拟点击下载
+                try {
+                    link.click();
+                    showToast(`开始下载: ${safeName}`);
+                } catch (e) {
+                    // 方案2：Fetch中转下载（处理跨域/防盗链）
+                    await fetchAndDownload(realAudioUrl, fileName);
+                } finally {
+                    document.body.removeChild(link);
+                }
+
+            } catch (error) {
+                console.error('下载失败:', error);
+                showToast(`下载失败: ${error.message || '请稍后重试'}`);
+            }
+        }
+
+        // 播放音乐
+        async function playMusic(index) {
+            if (index < 0 || index >= currentMusicList.length) return;
+            
+            const music = currentMusicList[index];
+            currentMusicIndex = index;
+            
+            // 修复封面图片质量
+            const coverUrl = music.pic ? music.pic.replace(/\?param=\d+x\d+/, '?param=800x800') : 'https://picsum.photos/800/800?music';
+            nowPlayingCover.src = coverUrl;
+            nowPlayingTitle.textContent = music.name || '未知歌曲';
+            nowPlayingArtist.textContent = music.artist || '未知歌手';
+            
+            try {
+                // 先解析真实的音频URL
+                const realAudioUrl = await getRealAudioUrl(music.url);
+                audioPlayer.src = realAudioUrl;
+                audioPlayer.load();
+                
+                // 尝试播放
+                await audioPlayer.play();
+                isPlaying = true;
+                updatePlayPauseIcon();
+                loadLyrics(music);
+                
+            } catch (err) {
+                console.error('播放失败:', err);
+                showToast('播放失败，尝试其他歌曲或检查网络');
+                // 自动切换下一首
+                setTimeout(() => playNext(), 1000);
+            }
+        }
+
+        // 加载歌词
+        async function loadLyrics(music) {
+            try {
+                if (!music.lrc || !music.lrc.includes('id=')) {
+                    lyricsContent.innerHTML = '<p class="text-slate-500 flex items-center justify-center gap-2"><i class="fa fa-music"></i>暂无歌词</p>';
+                    lyricLines = [];
+                    lyricTimeTags = [];
+                    return;
+                }
+                const songId = music.lrc.split('id=')[1].split('&')[0];
+                const url = `${API_BASE_URL}?server=${musicServer.value}&type=lrc&id=${songId}&dwrc=true`;
+                const response = await fetch(url);
+                const lyrics = await response.text();
+                parseAndRenderLyrics(lyrics);
+            } catch (error) {
+                console.error('加载歌词失败:', error);
+                lyricsContent.innerHTML = '<p class="text-slate-500 flex items-center justify-center gap-2"><i class="fa fa-music"></i>暂无歌词</p>';
+                lyricLines = [];
+                lyricTimeTags = [];
+            }
+        }
+
+        // 解析歌词
+        function parseAndRenderLyrics(lyricsText) {
+            lyricLines = [];
+            lyricTimeTags = [];
+            if (!lyricsText || lyricsText.trim() === '') {
+                lyricsContent.innerHTML = '<p class="text-slate-500 flex items-center justify-center gap-2"><i class="fa fa-music"></i>暂无歌词</p>';
+                return;
+            }
+            const lrcLines = lyricsText.split('\n');
+            const lyricsHTML = [];
+            lrcLines.forEach(line => {
+                const timeMatch = line.match(/\[(\d{2}):(\d{2})(?:\.(\d{2}))?\]/);
+                if (timeMatch && line.length > 8) {
+                    const minutes = parseInt(timeMatch[1]);
+                    const seconds = parseInt(timeMatch[2]);
+                    const milliseconds = timeMatch[3] ? parseInt(timeMatch[3]) * 10 : 0;
+                    const timeInSeconds = minutes * 60 + seconds + milliseconds / 1000;
+                    const text = line.replace(/\[(\d{2}):(\d{2})(?:\.(\d{2}))?\]/, '').trim();
+                    if (text) {
+                        lyricTimeTags.push(timeInSeconds);
+                        lyricLines.push(text);
+                        lyricsHTML.push(`<p class="lyric-line py-2 text-slate-300">${text}</p>`);
+                    }
+                }
+            });
+            lyricsContent.innerHTML = lyricsHTML.join('') || '<p class="text-slate-500 flex items-center justify-center gap-2"><i class="fa fa-music"></i>暂无歌词</p>';
+        }
+
+        // 切换播放暂停
+        function togglePlayPause() {
+            if (currentMusicIndex === -1 && currentMusicList.length > 0) {
+                playMusic(0);
+                return;
+            }
+            if (isPlaying) {
+                audioPlayer.pause();
+            } else {
+                audioPlayer.play().catch(err => {
+                    console.error('播放失败:', err);
+                    showToast('播放失败');
+                });
+            }
+            isPlaying = !isPlaying;
+            updatePlayPauseIcon();
+        }
+
+        function updatePlayPauseIcon() {
+            playPauseIcon.className = isPlaying ? 'fa fa-pause text-lg md:text-xl' : 'fa fa-play text-lg md:text-xl';
+        }
+
+        function playPrevious() {
+            if (currentMusicList.length === 0) return;
+            const newIndex = currentMusicIndex <= 0 ? currentMusicList.length - 1 : currentMusicIndex - 1;
+            playMusic(newIndex);
+        }
+
+        function playNext() {
+            if (currentMusicList.length === 0) return;
+            const newIndex = currentMusicIndex >= currentMusicList.length - 1 ? 0 : currentMusicIndex + 1;
+            playMusic(newIndex);
+        }
+
+        function updateProgress() {
+            if (isNaN(audioPlayer.duration)) return;
+            const percent = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+            progressBar.style.width = `${Math.max(0, Math.min(100, percent))}%`;
+            currentTimeEl.textContent = formatTime(audioPlayer.currentTime * 1000);
+            highlightCurrentLyric();
+        }
+
+        function updateTotalTime() {
+            if (isNaN(audioPlayer.duration)) return;
+            totalTimeEl.textContent = formatTime(audioPlayer.duration * 1000);
+        }
+
+        function seekAudio(e) {
+            if (isNaN(audioPlayer.duration)) return;
+            const rect = progressContainer.getBoundingClientRect();
+            const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+            audioPlayer.currentTime = percent * audioPlayer.duration;
+        }
+
+        function adjustVolume() {
+            audioPlayer.volume = volumeSlider.value / 100;
+            isMuted = audioPlayer.volume === 0;
+            updateVolumeIcon();
+        }
+
+        function toggleMute() {
+            audioPlayer.muted = !audioPlayer.muted;
+            isMuted = audioPlayer.muted;
+            volumeSlider.value = audioPlayer.muted ? 0 : 80;
+            audioPlayer.volume = audioPlayer.muted ? 0 : 0.8;
+            updateVolumeIcon();
+        }
+
+        function updateVolumeIcon() {
+            if (audioPlayer.muted || audioPlayer.volume === 0) {
+                volumeIcon.className = 'fa fa-volume-off text-base md:text-lg';
+            } else if (audioPlayer.volume < 0.5) {
+                volumeIcon.className = 'fa fa-volume-down text-base md:text-lg';
+            } else {
+                volumeIcon.className = 'fa fa-volume-up text-base md:text-lg';
+            }
+        }
+
+        function toggleLyrics() {
+            lyricsVisible = !lyricsVisible;
+            lyricsModal.classList.toggle('hidden', !lyricsVisible);
+            document.body.style.overflow = lyricsVisible ? 'hidden' : 'auto';
+            if (lyricsVisible) highlightCurrentLyric();
+        }
+
+        function highlightCurrentLyric() {
+            if (!lyricsVisible || lyricTimeTags.length === 0) return;
+            const lines = lyricsContent.querySelectorAll('.lyric-line');
+            if (lines.length === 0) return;
+            const currentTime = audioPlayer.currentTime;
+            let currentIndex = 0;
+            for (let i = 0; i < lyricTimeTags.length; i++) {
+                if (currentTime >= lyricTimeTags[i]) currentIndex = i;
+                else break;
+            }
+            lines.forEach(line => line.classList.remove('lyric-active'));
+            if (lines[currentIndex]) {
+                lines[currentIndex].classList.add('lyric-active');
+                lines[currentIndex].scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        }
+
+        function toggleTheme() {
+            const body = document.body;
+            const isDark = body.classList.contains('from-dark');
+            if (isDark) {
+                body.classList.remove('from-dark', 'to-slate-900', 'text-light');
+                body.classList.add('from-light', 'to-slate-200', 'text-dark');
+                themeToggle.querySelector('i').className = 'fa fa-sun-o text-slate-700';
+            } else {
+                body.classList.add('from-dark', 'to-slate-900', 'text-light');
+                body.classList.remove('from-light', 'to-slate-200', 'text-dark');
+                themeToggle.querySelector('i').className = 'fa fa-moon-o text-slate-300';
+            }
+        }
+
+        function formatTime(ms) {
+            if (isNaN(ms)) return '00:00';
+            const seconds = Math.floor((ms / 1000) % 60);
+            const minutes = Math.floor((ms / 1000 / 60) % 60);
+            return `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        function showToast(message) {
+            const oldToast = document.querySelector('.toast-notification');
+            if (oldToast) oldToast.remove();
+            const toast = document.createElement('div');
+            toast.className = 'toast-notification fixed bottom-20 left-1/2 -translate-x-1/2 bg-slate-800/95 text-white px-4 py-2 rounded-lg shadow-lg z-50 backdrop-blur-sm border border-slate-700';
+            toast.textContent = message;
+            document.body.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                setTimeout(() => toast.remove(), 500);
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

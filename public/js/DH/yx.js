@@ -13,7 +13,7 @@ const yxConfig = {
     },
     Mingchao: {
         name: "鸣潮",
-        logo: "https://img.tapimg.com/market/images/5161672da2d085ca8d9551ae054fad92.png/appicon_m?t=1",
+        logo: "  ",
         introduce: "库洛游戏开发的开放世界动作RPG，拥有流畅战斗系统与奇幻世界观",
         URL: "https://mc.kurogames.com/main"
     },

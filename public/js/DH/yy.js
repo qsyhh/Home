@@ -17,18 +17,6 @@ const yyConfig = {
         introduce: "轻量且强大的代码编辑器，支持语法高亮、断点调试、Git版本控制集成、插件扩展",
         URL: "https://code.visualstudio.com/download"
     },
-    WPS: {
-        name: "WPS办公",
-        logo: "https://www.wps.cn/favicon.ico",
-        introduce: "免费全能办公套件，完美兼容Office格式，涵盖文档编辑、表格分析、演示文稿制作",
-        URL: "https://www.wps.cn/"
-    },
-    Thunder: {
-        name: "迅雷",
-        logo: "https://www.xunlei.com/favicon.ico",
-        introduce: "经典高速下载工具，支持磁力链接、种子文件下载、多线程加速、离线下载",
-        URL: "https://www.xunlei.com/"
-    },
     QQ: {
         name: "QQ",
         logo: "https://static.cdnlogo.com/logos/t/62/tencent-qq.svg",
