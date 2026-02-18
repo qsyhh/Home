@@ -1,8 +1,8 @@
 window.sponsorsData = [
-  { name: "L", amount: 5.00, date: "2025-8-22" },
   { name: "七草", amount: 2.73, date: "2025-8-11" },
   { name: "Fafa", amount: 1.00, date: "2025-8-12" },
   { name: "花生米", amount: 2.00, date: "2025-8-15" },
+  { name: "L", amount: 5.00, date: "2025-8-22" },
   { name: "Error: Cannot findid", amount: 5.00, date: "2026-1-7" },
   { name: "霜寂i", amount: 28.88, date: "2026-2-4" },
   { name: "弃", amount: 1.20, date: "2026-2-16" },
