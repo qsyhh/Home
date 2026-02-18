@@ -1,17 +1,16 @@
 const IMAGE_API_URL = "https://t.alcy.cc/pc";
 
-// DOM加载完成后执行
 document.addEventListener('DOMContentLoaded', function() {
   // 确保数据已加载
   if (!window.sponsorsData) {
-    console.error('数据未加载');
+    console.error('赞助者数据未加载');
     return;
   }
   
   // 初始化图片背景
   initImageBackground();
   
-  // 渲染赞助者列表
+  // 渲染赞助者列表（使用LB2.js中的数据）
   renderSponsors(window.sponsorsData);
   
   // 更新统计数据
@@ -56,12 +55,12 @@ function renderSponsors(sponsorList) {
   
   // 如果没有数据
   if (sponsorList.length === 0) {
-    listContainer.innerHTML = '<p class="no-data">没有找到符合条件的赞助记录</p>';
+    listContainer.innerHTML = '<p class="no-data">没有找到赞助记录</p>';
     return;
   }
   
-  // 按原顺序渲染，不再排序
-  const sortedList = [...sponsorList]; // 直接使用原顺序，不做sort
+  // 日期排序
+  const sortedList = [...sponsorList].sort((a, b) => new Date(b.date) - new Date(a.date));
   
   // 生成赞助项
   sortedList.forEach(sponsor => {
