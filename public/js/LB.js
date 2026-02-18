@@ -4,14 +4,14 @@ const IMAGE_API_URL = "https://t.alcy.cc/pc";
 document.addEventListener('DOMContentLoaded', function() {
   // 确保数据已加载
   if (!window.sponsorsData) {
-    console.error('赞助者数据未加载，请检查LB2.js是否正确引入');
+    console.error('数据未加载');
     return;
   }
   
   // 初始化图片背景
   initImageBackground();
   
-  // 渲染赞助者列表（使用LB2.js中的数据）
+  // 渲染赞助者列表
   renderSponsors(window.sponsorsData);
   
   // 更新统计数据
@@ -60,8 +60,8 @@ function renderSponsors(sponsorList) {
     return;
   }
   
-  // 按日期排序（最新的在前）
-  const sortedList = [...sponsorList].sort((a, b) => new Date(b.date) - new Date(a.date));
+  // 按原顺序渲染，不再排序
+  const sortedList = [...sponsorList]; // 直接使用原顺序，不做sort
   
   // 生成赞助项
   sortedList.forEach(sponsor => {
@@ -71,7 +71,7 @@ function renderSponsors(sponsorList) {
     
     sponsorItem.innerHTML = `
       <div class="sponsor-name">${sponsor.name}</div>
-      <div class="sponsor-amount">¥${sponsor.amount}</div>
+      <div class="sponsor-amount">¥${sponsor.amount.toFixed(2)}</div>
       <div class="sponsor-date">${formatDate(sponsor.date)}</div>
     `;
     
@@ -83,14 +83,14 @@ function renderSponsors(sponsorList) {
 function updateStats(sponsorList) {
   // 计算总金额
   const totalAmount = sponsorList.reduce((sum, sponsor) => sum + sponsor.amount, 0);
-  // 计算总人数
-  const totalPeople = sponsorList.length;
+  // 计算总人数（去重）
+  const totalPeople = [...new Set(sponsorList.map(item => item.name))].length;
   // 获取最近更新日期
   const sortedDates = [...sponsorList].sort((a, b) => new Date(b.date) - new Date(a.date));
   const recentUpdate = sortedDates.length > 0 ? formatDate(sortedDates[0].date) : '--';
   
   // 更新DOM
-  document.getElementById('total-amount').textContent = `¥${totalAmount}`;
+  document.getElementById('total-amount').textContent = `¥${Number(totalAmount.toFixed(2))}`;
   document.getElementById('total-people').textContent = totalPeople;
   document.getElementById('recent-update').textContent = recentUpdate;
 }
