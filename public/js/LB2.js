@@ -1,4 +1,3 @@
-// 赞助列表
 window.sponsorsData = [
   { name: "L", amount: 5.00, date: "2025-8-22" },
   { name: "七草", amount: 2.73, date: "2025-8-11" },
@@ -12,5 +11,5 @@ window.sponsorsData = [
   { name: "Aozaki Arina", amount: 88.00, date: "2026-2-17" },
   { name: "二羊妮", amount: 1.00, date: "2026-2-18" },
   { name: "果妹❤️", amount: 8.88, date: "2026-2-18" },
-  { name: "TL", amount: 5.20, date: "2026-2-18" },
+  { name: "TL", amount: 5.20, date: "2026-2-18" }
 ];
