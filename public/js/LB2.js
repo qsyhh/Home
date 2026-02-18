@@ -12,4 +12,5 @@ window.sponsorsData = [
    { name: "Aozaki Arina", amount: 88.00, date: "2026-2-17" },
   { name: "二养妮", amount: 1.00, date: "2026-2-18" },
    { name: "果妹❤️", amount: 8.88, date: "2026-2-18" },
+   { name: "TL", amount: 5.20, date: "2026-2-18" },
 ];
