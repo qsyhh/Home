@@ -9,7 +9,7 @@ window.sponsorsData = [
    { name: "Fafa", amount: 0.52, date: "2026-2-17" },
    { name: "弃", amount: 1.20, date: "2026-2-16" },
    { name: "Fafa", amount: 5.20, date: "2026-2-17" },
+   { name: "Aozaki Arina", amount: 88.00, date: "2026-2-18" },
   { name: "二养妮", amount: 1.00, date: "2026-2-18" },
    { name: "果妹❤️", amount: 8.88, date: "2026-2-18" },
-   { name: "Aozaki Arina", amount: 88.00, date: "2026-2-18" },
 ];
