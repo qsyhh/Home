@@ -1,18 +1,14 @@
-// Token
-const TOKEN = '';
+const TOKEN = ' ';
 
-// 图片输出配置
-const OUTPUT_FILE = "../js/TK2.js"; // 生成的图片数据文件名
-const DEFAULT_CATEGORY = "YS"; // 默认分类
-const IMAGE_DIR = './image'; // 图片目录路径
-
-// 上传间隔配置（单位：毫秒，1000毫秒=1秒, 500-3000毫秒）
+const OUTPUT_FILE = "../js/TK2.js";
+const DEFAULT_CATEGORY = "YS";
+const IMAGE_DIR = './img/';
 const UPLOAD_INTERVAL = 1000; 
 
 const fs = require('fs');
 const path = require('path');
 const sizeOf = require('image-size').default;
-const fetch = require('node-fetch');
+const fetch = (...args) => import('node-fetch').then(({default: fetch}) => fetch(...args));
 const FormData = require('form-data');
 
 class KurobbsImageUploader {
@@ -140,16 +136,15 @@ class KurobbsImageUploader {
 
     async generateTKFile(uploadResults, category = DEFAULT_CATEGORY, outputPath = OUTPUT_FILE) {
         try {
+            const outputDir = path.dirname(outputPath);
+            if (!fs.existsSync(outputDir)) {
+                fs.mkdirSync(outputDir, { recursive: true });
+            }
+
             let fileContent = 'window.galleryImages = [\n';
 
             uploadResults.forEach((result, index) => {
                 let title = `原神美图${index + 1}`;
-                
-                /*  暂时舍弃的文件名提取标题的逻辑
-                 const baseName = path.basename(result.filename, path.extname(result.filename));
-                if (baseName && baseName.trim() !== '' && !/^\d+$/.test(baseName.trim())) {
-                    title = baseName;
-                } */
 
                 fileContent += '    {\n';
                 fileContent += `        title: "${title}",\n`;
