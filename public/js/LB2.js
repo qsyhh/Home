@@ -11,5 +11,12 @@ window.sponsorsData = [
   { name: "Aozaki Arina", amount: 88.00, date: "2026-2-17" },
   { name: "二羊妮", amount: 1.00, date: "2026-2-18" },
   { name: "果妹❤️", amount: 8.88, date: "2026-2-18" },
-  { name: "TL", amount: 5.20, date: "2026-2-18" }
+  { name: "TL", amount: 5.20, date: "2026-2-18" },
+  { name: "*嘿嘿", amount: 11.01, date: "2026-2-21" },
+  { name: "*日出", amount: 9.90, date: "2026-2-21" },
+  { name: "*Fafa", amount: 9.90, date: "2026-2-21" },
+  { name: "*duo.", amount: 9.90, date: "2026-2-21" },
+  { name: "*Agoni", amount: 9.90, date: "2026-2-21" },
+  { name: "*等风来", amount: 20.00, date: "2026-2-22" },
+  { name: "*独", amount: 6.66, date: "2026-2-22" },
 ];
