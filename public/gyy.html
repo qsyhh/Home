@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.5, minimum-scale=1.5, maximum-scale=1.5, user-scalable=no">
+    <title>💖 想姐姐 · 倒计时 耿岩延姐姐</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#FF9AAA',
+                        secondary: '#FFC3D8',
+                        accent: '#FFF0F3',
+                    },
+                    fontFamily: {
+                        cute: ['"Comic Sans MS"', '"PingFang SC"', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .text-shadow {
+                text-shadow: 0 4px 10px rgba(255, 154, 170, 0.4);
+            }
+            .bounce-slow {
+                animation: bounceSlow 2.5s infinite ease-in-out;
+            }
+            .float {
+                animation: float 3s infinite ease-in-out;
+            }
+            .pulse-slow {
+                animation: pulseSlow 3s infinite ease-in-out;
+            }
+            .no-scroll {
+                overflow: hidden;
+                touch-action: none;
+            }
+        }
+        @keyframes bounceSlow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-6px) rotate(1deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        @keyframes pulseSlow {
+            0%, 100% { opacity: 0.9; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.03); }
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-pink-100 via-rose-50 to-blue-50 min-h-screen flex flex-col items-center justify-center font-cute no-scroll">
+
+    <!-- 你要的图标 LOGO -->
+    <div class="mb-5 w-20 h-20 bounce-slow">
+        <img 
+            src="https://upload-bbs.miyoushe.com/upload/2026/03/27/320188760/f7fc5ed5fd8f767f8f3d0835d5fb21bb_8662137875904006462.png?x-oss-process=image/resize,s_600/quality,q_80/auto-orient,0/interlace,1/format,png" 
+            class="w-full h-full object-contain"
+            alt="Logo"
+        >
+    </div>
+
+    <div class="relative bg-white/90 backdrop-blur-xl rounded-3xl shadow-2xl p-8 md:p-10 w-full max-w-md pulse-slow border-4 border-primary/30 select-none">
+        <h1 class="text-center text-3xl md:text-4xl font-bold text-primary text-shadow mb-3 bounce-slow">
+            <i class="fa fa-heart text-pink-400"></i> 
+            距离见到姐姐~!
+        </h1>
+        <p class="text-center text-sm text-gray-400 mb-6">每分每秒 都在想你</p>
+
+        <div class="grid grid-cols-4 gap-3 text-center my-6">
+            <div class="flex flex-col items-center">
+                <div id="days" class="text-[clamp(2.5rem,6vw,3.5rem)] font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-pink-400">00</div>
+                <span class="text-sm text-gray-400 mt-1">天</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <div id="hours" class="text-[clamp(2.5rem,6vw,3.5rem)] font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-pink-400">00</div>
+                <span class="text-sm text-gray-400 mt-1">时</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <div id="minutes" class="text-[clamp(2.5rem,6vw,3.5rem)] font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-pink-400">00</div>
+                <span class="text-sm text-gray-400 mt-1">分</span>
+            </div>
+            <div class="flex flex-col items-center">
+                <div id="seconds" class="text-[clamp(2.5rem,6vw,3.5rem)] font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-pink-400">00</div>
+                <span class="text-sm text-gray-400 mt-1">秒</span>
+            </div>
+        </div>
+
+        <p class="text-center text-gray-500 text-lg mb-2">五一清明 超姐姐 嘿嘿~</p>
+        <p class="text-center text-primary/80 text-sm font-bold">满心都是姐姐 · 超级想姐姐</p>
+
+        <div class="flex justify-center gap-6 text-2xl text-primary/70 mt-8">
+            <i class="fa fa-star bounce-slow"></i>
+            <i class="fa fa-cloud float"></i>
+            <i class="fa fa-heart float"></i>
+        </div>
+    </div>
+
+    <script>
+        // 禁用左右方向键
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+                e.preventDefault();
+            }
+        });
+
+        const targetDate = new Date("2026-05-01T09:00:00+08:00");
+
+        function updateCountdown() {
+            const now = new Date();
+            const diff = targetDate - now;
+
+            if (diff <= 0) {
+                document.getElementById('days').innerText = '00';
+                document.getElementById('hours').innerText = '00';
+                document.getElementById('minutes').innerText = '00';
+                document.getElementById('seconds').innerText = '00';
+                return;
+            }
+
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerText = days.toString().padStart(2, '0');
+            document.getElementById('hours').innerText = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').innerText = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').innerText = seconds.toString().padStart(2, '0');
+        }
+
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+    </script>
+</body>
+</html>
